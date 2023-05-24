@@ -1,0 +1,50 @@
+
+
+/* Class styling */
+.flex-column {
+    flex-direction: column;
+}
+
+.text-center {
+    text-align: center;
+}
+
+/* Media Queries
+* ------------------------------------------
+*  Responsive Grid Media Queries - 1280, 1024, 768, 480
+*   1280-1024   - desktop (default grid)
+*   1024-768    - tablet landscape
+*   768-480     - tablet 
+*   480-less    - phone landscape & smaller
+* --------------------------------------------
+*/
+@media all and (min-width: 1280px) {
+    #index_container {
+        max-width: 75%;
+        padding: 1rem 2rem 0 2rem;
+    }
+}
+
+@media all and (min-width: 1024px) and (max-width: 1280px) {
+    #index_container {
+        padding: 1rem 2rem 0 2rem;
+    }
+}
+
+@media all and (min-width: 768px) and (max-width: 1024px) {
+    #index_container {
+        padding: 1rem 2rem 0 2rem;
+    }
+}
+
+@media all and (min-width: 480px) and (max-width: 768px) {
+    #index_container {
+        padding: 1rem 2rem 0 2rem;
+    }
+}
+
+@media all and (max-width: 480px) {
+    #index_container {
+        padding: 1rem 2rem 0 2rem;
+    }
+}

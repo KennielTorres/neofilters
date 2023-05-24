@@ -1,0 +1,112 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+
+    --md-3: 3rem;
+
+    --spotify-green: #1DB954;
+    --dark-blue: #27374D;
+    --med-blue: #526D82;
+    --soft-blue: #9DB2BF;
+    --light-blue: #DDE6ED;
+    --white: #fff;
+    --spotify-dark-gray: #535353;
+    --spotify-gray: #b3b3b3;
+}
+
+/* Class styling */
+.w-100 {
+    width: 100%;
+}
+
+.h-100 {
+    height: 100%;
+}
+
+.flex {
+    display: flex;
+}
+
+.justify-center {
+    justify-content: center;
+}
+
+.justify-evenly {
+    justify-content: space-evenly;
+}
+
+.align-center {
+    align-items: center;
+}
+
+.no-text-decor {
+    text-decoration: none;
+}
+
+.color-inherit {
+    color: inherit;
+}
+
+
+/* Structure styling */
+#body_container {
+    height: 100vh;
+    display: grid;
+    grid-template-rows: auto 1fr auto;
+    grid-template-columns: 1fr;
+    grid-template-areas: 
+    'header'
+    'main'
+    'footer';
+}
+
+#header {
+    grid-area: header;
+    height: var(--md-3);
+    background-color: var(--dark-blue);
+    color: var(--white);
+}
+
+#main {
+    grid-area: main;
+    height: minmax(50vh, 90%);
+    overflow: auto;
+}
+
+#footer {
+    grid-area: footer;
+    height: var(--md-3);
+    background-color: var(--dark-blue);
+    color: var(--white);
+}
+
+/* Specific component styling */
+.list-item {
+    list-style: none;
+}
+
+/* Media Queries
+* ------------------------------------------
+*  Responsive Grid Media Queries - 1280, 1024, 768, 480
+*   1280-1024   - desktop (default grid)
+*   1024-768    - tablet landscape
+*   768-480     - tablet 
+*   480-less    - phone landscape & smaller
+* --------------------------------------------
+*/
+@media all and (min-width: 1024px) and (max-width: 1280px) {
+
+}
+
+@media all and (min-width: 768px) and (max-width: 1024px) {
+
+}
+
+@media all and (min-width: 480px) and (max-width: 768px) {
+
+}
+
+@media all and (max-width: 480px) {
+
+}
