@@ -7,14 +7,16 @@
         <meta name="description" content="Advanced filtering options for Spotify.">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="stylesheet" type="text/css" href="../static/styles/base.css">
-        {% block styling %}
+        {% block head %}
         {% endblock %}
     </head>
     <body>
         <div id="body_container">
             <header id="header">
-                <nav class="flex justify-center align-items-center h-100">
+                <nav class="flex {%block navclasses %}{% endblock%} align-items-center h-100">
                     <a href="{{ url_for('index') }}" class="no-text-decor color-inherit">spotifilters</a>
+                    {% block nav %}
+                    {% endblock %}
                 </nav>
             </header>
             <main id="main">

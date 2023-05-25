@@ -52,16 +52,21 @@ def callback():
     # Validates access token, renews it if expired or broken, and saves it to cache
     cache_handler.save_token_to_cache(auth_manager.validate_token(access_token))
 
-    # return redirect('/')
-    # return redirect('http://localhost:3000' + '?access_token=' + cache_handler.get_cached_token()['access_token'])
-    # return redirect('http://localhost:3000/')
     # extract data from response, access_token example: cache_handler.get_cached_token().get('access_token')
-    return str(cache_handler.get_cached_token())
+    return redirect('/dashboard')
 
 @app.route('/dashboard')
 @login_required
 def dashboard():
-    return 'dashboard'
+    cache_handler = spotipy.cache_handler.FlaskSessionCacheHandler(session)
+    auth_manager = spotipy.oauth2.SpotifyOAuth(cache_handler=cache_handler)
+    # Token expired, or broken, return to sign in page
+    if not auth_manager.validate_token(cache_handler.get_cached_token()):
+        return redirect('/')    
+    
+    spotify = spotipy.Spotify(auth_manager=auth_manager)
+
+    return render_template('dashboard.html', spotify=spotify)
 
 
 @app.route('/signout')

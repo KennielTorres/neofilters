@@ -1,13 +1,19 @@
 {% extends 'base.html' %}
 
-{% block styling %}
+{% block head %}
 <link rel="stylesheet" href="../static/styles/dashboard.css">
 {% endblock %}
 
+{% block navclasses %} justify-space-between margin-sides-1 {% endblock%}
+
+
+{% block nav %}
+<button type="button" title='Sign Out of Spotify.' onclick="window.location.href='signout'">Sign Out</button>
+{% endblock %}
 
 {% block content %}
-<div id="dashboard_container">
-
+<div id="dashboard_container" class="margin-sides-1">
+    Welcome, {{ spotify.me().get('display_name') }}
 </div>
 
 
