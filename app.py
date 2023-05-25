@@ -24,15 +24,31 @@ def index():
     auth_url = auth_manager.get_authorize_url()
     return render_template('index.html', auth_url=auth_url)
 
-@app.route('/sign_in')
-def signin():
+@app.route('/callback')
+def callback():
     cache_handler = spotipy.cache_handler.FlaskSessionCacheHandler(session)
-    auth_manager = spotipy.oauth2.SpotifyOAuth(scope=SCOPE,
-                                               cache_handler=cache_handler,
+    auth_manager = spotipy.oauth2.SpotifyOAuth(cache_handler=cache_handler,
+                                               scope=SCOPE,
                                                show_dialog=True)
-    auth_url = auth_manager.get_authorize_url()
-    return redirect(auth_url)
+    
+    #  Authorization code from Spotify's callback after signing in and accepting app. Returns string
+    auth_code = auth_manager.get_authorization_code(request.args.get("code"))
 
+    # Unable to get authorization code
+    if not auth_manager.get_authorization_code(request.args.get("code")):
+        return redirect('/sign_in')
+    
+    # Token acquired from authorization code above
+    # For code string only, add arg: as_dict=False
+    access_token = auth_manager.get_access_token(auth_code)
+
+    # Validates access token, renews it if expired or broken, and saves it to cache
+    cache_handler.save_token_to_cache(auth_manager.validate_token(access_token))
+
+    # return redirect('/')
+    # return redirect('http://localhost:3000' + '?access_token=' + cache_handler.get_cached_token()['access_token'])
+    # return redirect('http://localhost:3000/')
+    return str(cache_handler.get_cached_token())
 
 if __name__ == "__main__":
     app.run(debug=True, port=8000)
