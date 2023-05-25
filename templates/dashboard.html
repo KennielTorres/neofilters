@@ -13,7 +13,30 @@
 
 {% block content %}
 <div id="dashboard_container" class="margin-sides-1">
-    Welcome, {{ spotify.me().get('display_name') }}
+    <h1>Welcome, {{ spotify.me().get('display_name') }}</h1>
+    <div id="" class="flex justify-space-between">
+        <h3>Playlists</h3>
+        <input type="text" placeholder="Search" maxlength="40">
+    </div>
+    <div>
+        <ul>
+            {% for item in spotify.current_user_playlists().get('items') %}
+                <li class="flex align-items-center justify-space-between">
+                    <img src="{{item.get('images')[0].get('url')}}" width="50px" height="50px" alt="Image for playlist: {{item.get('name')}}">
+                    <p>
+                        {{ item.get('name')|default('Playlist',true)|truncate(18,true) }}
+                    </p>
+                    <p>
+                        {% if item.get('public') %}
+                            Public
+                        {% else %}
+                            Private
+                        {% endif %}
+                    </p>
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
 </div>
 
 
