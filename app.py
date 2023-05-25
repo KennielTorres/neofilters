@@ -65,8 +65,9 @@ def dashboard():
         return redirect('/')    
     
     spotify = spotipy.Spotify(auth_manager=auth_manager)
+    playlist_limit = 20 #testing, set to 50 once done
 
-    return render_template('dashboard.html', spotify=spotify)
+    return render_template('dashboard.html', spotify=spotify, playlist_limit=playlist_limit)
 
 
 @app.route('/signout')
