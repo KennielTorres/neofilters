@@ -2,7 +2,8 @@
     flask spotipy Flask-Session
 '''
 import os
-from flask import Flask, session, request, redirect, render_template
+import functools
+from flask import Flask, session, request, redirect, render_template, url_for
 import spotipy
 from flask_session import Session
 
@@ -14,6 +15,14 @@ Session(app)
 
 SCOPE = 'user-read-private user-read-email user-library-read playlist-read-private playlist-read-collaborative user-top-read'
 
+# Decorator to validate that user has signed in and can enter target route
+def login_required(func):
+    @functools.wraps(func)
+    def secure_function(*args, **kwargs):
+        if "token_info" not in session:
+            return redirect(url_for("index", next=request.url))
+        return func(*args, **kwargs)
+    return secure_function
 
 @app.route('/')
 def index():
@@ -27,16 +36,14 @@ def index():
 @app.route('/callback')
 def callback():
     cache_handler = spotipy.cache_handler.FlaskSessionCacheHandler(session)
-    auth_manager = spotipy.oauth2.SpotifyOAuth(cache_handler=cache_handler,
-                                               scope=SCOPE,
-                                               show_dialog=True)
+    auth_manager = spotipy.oauth2.SpotifyOAuth(cache_handler=cache_handler)
     
     #  Authorization code from Spotify's callback after signing in and accepting app. Returns string
     auth_code = auth_manager.get_authorization_code(request.args.get("code"))
 
     # Unable to get authorization code
     if not auth_manager.get_authorization_code(request.args.get("code")):
-        return redirect('/sign_in')
+        return redirect('/')
     
     # Token acquired from authorization code above
     # For code string only, add arg: as_dict=False
@@ -48,7 +55,24 @@ def callback():
     # return redirect('/')
     # return redirect('http://localhost:3000' + '?access_token=' + cache_handler.get_cached_token()['access_token'])
     # return redirect('http://localhost:3000/')
+    # extract data from response, access_token example: cache_handler.get_cached_token().get('access_token')
     return str(cache_handler.get_cached_token())
+
+@app.route('/dashboard')
+@login_required
+def dashboard():
+    return 'dashboard'
+
+
+@app.route('/signout')
+@login_required
+def signout():
+    session.pop("token_info", None)
+    return redirect('/')
+
+
+
+
 
 if __name__ == "__main__":
     app.run(debug=True, port=8000)
