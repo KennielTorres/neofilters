@@ -65,9 +65,20 @@ def dashboard():
         return redirect('/')    
     
     spotify = spotipy.Spotify(auth_manager=auth_manager)
-    playlist_limit = 20 #testing, set to 50 once done
+    playlist_limit = 10 #testing, set to 50 once done
+    playlists_array = [] # Holds all playlists' data
 
-    return render_template('dashboard.html', spotify=spotify, playlist_limit=playlist_limit)
+    playlist_data = spotify.current_user_playlists(playlist_limit)
+    # Add playlists to array
+    playlists_array = playlist_data.get('items')
+
+    # If there are more pages with playlists, add them to array.
+    while playlist_data.get('next'):
+        playlist_data = spotify.next(playlist_data)
+        playlists_array.extend(playlist_data.get('items'))
+
+
+    return render_template('dashboard.html', spotify=spotify, playlists_array=playlists_array)
 
 
 @app.route('/signout')
@@ -76,8 +87,30 @@ def signout():
     session.pop("token_info", None)
     return redirect('/')
 
+@app.route('/testing')
+@login_required
+def testing():
+    cache_handler = spotipy.cache_handler.FlaskSessionCacheHandler(session)
+    auth_manager = spotipy.oauth2.SpotifyOAuth(cache_handler=cache_handler)
+    # Token expired, or broken, return to sign in page
+    if not auth_manager.validate_token(cache_handler.get_cached_token()):
+        return redirect('/')    
+    
+    spotify = spotipy.Spotify(auth_manager=auth_manager)
 
+    playlist_limit = 50
+    playlist_offset = 0
+    playlists_array = []
 
+    playlist_data = spotify.current_user_playlists(playlist_limit, playlist_offset)
+    playlists_array = playlist_data.get('items')
+
+    while playlist_data.get('next'):
+        playlist_data = spotify.next(playlist_data)
+        playlists_array.extend(playlist_data.get('items'))
+
+    # return str(spotify.next(query))
+    return playlists_array[0]
 
 
 if __name__ == "__main__":

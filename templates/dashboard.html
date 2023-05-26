@@ -29,60 +29,20 @@
                 <th>Name</th>
                 <th>Status</th>
             </tr>
-            {% for item in spotify.current_user_playlists(playlist_limit).get('items') %}
-                {% if not loop.last %}
-                    <tr class="text-center">
-                        <td><img src="{{item.get('images')[0].get('url')}}" width="50px" height="50px" alt="Image for playlist: {{item.get('name')}}"></td>
-                        <td>
-                            {{ item.get('name')|default('Playlist',true)|truncate(18,true) }}
-                        </td>
-                        <td>
-                            {% if item.get('public') %}
-                                Public
-                            {% else %}
-                                Private
-                            {% endif %}
-                        </td>
-                    </tr>
-
-                <!-- If last playlist is reached, check for more; if available, activate infinite scroll; else render normally. -->
-                {% else%} 
-                    {% if spotify.current_user_playlists(playlist_limit).next != None %}
-                        <tr class="text-center"
-                            hx-get="{{ spotify.next(spotify.current_user_playlists(playlist_limit)) }}"
-                            hx-trigger="revealed"
-                            hx-swap="afterend"
-                            hx-target="#playlist_table"
-                        >
-                            <td><img src="{{item.get('images')[0].get('url')}}" width="50px" height="50px" alt="Image for playlist: {{item.get('name')}}"></td>
-                            <td>
-                                [HAS NEXT] {{ item.get('name')|default('Playlist',true)|truncate(18,true) }}
-                                <!-- {{spotify.current_user_playlists(playlist_limit)}} -->
-                            </td>
-                            <td>
-                                {% if item.get('public') %}
-                                    Public
-                                {% else %}
-                                    Private
-                                {% endif %}
-                            </td>
-                        </tr>
-                    {% else %}
-                        <tr class="text-center">
-                            <td><img src="{{item.get('images')[0].get('url')}}" width="50px" height="50px" alt="Image for playlist: {{item.get('name')}}"></td>
-                            <td>
-                                {{ item.get('name')|default('Playlist',true)|truncate(18,true) }}
-                            </td>
-                            <td>
-                                {% if item.get('public') %}
-                                    Public
-                                {% else %}
-                                    Private
-                                {% endif %}
-                            </td>
-                        </tr>
-                    {% endif %}
-                {% endif %}
+            {% for playlist in playlists_array %}
+                <tr class="text-center">
+                    <td><img src="{{playlist.get('images')[0].get('url')}}" width="50px" height="50px" alt="Image for playlist: {{playlist.get('name')}}"></td>
+                    <td>
+                        {{ playlist.get('name')|default('Playlist',true)|truncate(18,true) }}
+                    </td>
+                    <td>
+                        {% if playlist.get('public') %}
+                            Public
+                        {% else %}
+                            Private
+                        {% endif %}
+                    </td>
+                </tr>
             {% endfor %}
         </table>
     </div>
