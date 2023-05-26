@@ -6,20 +6,21 @@
 <script type="text/javascript">
     jQuery(document).ready(function($){
         $('#dynamic_table_body tr').each(function(){
-            $(this).attr('data-search-term', $(this).text().toLowerCase());
+            $(this).attr('data-search-term', $(this).text().trim().replace(/\s\s+/g, ' ').toLowerCase());
         });
 
         $('#live-search-input').on('keyup', function(){
-        var searchTerm = $(this).val().toLowerCase();
+        var searchTerm = $(this).val().trim().toLowerCase();
 
-          $('#dynamic_table_body tr').each(function(){
-                if ($(this).filter('[data-search-term *= ' + searchTerm + ']').length > 0 || searchTerm.length < 1) {
-                    $(this).show();
-                } else {
-                    $(this).hide();
-                }
+        $('#dynamic_table_body tr').each(function(){
+            if ($(this).filter('[data-search-term*="' + searchTerm + '"]').length > 0 || searchTerm.length < 1) {
+                $(this).show();
+            } 
+            else {
+                $(this).hide();
+            }
+        });
 
-            });
         });
     });
 </script>
