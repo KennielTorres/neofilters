@@ -85,9 +85,9 @@ def signout():
     session.pop("token_info", None)
     return redirect('/')
 
-@app.route('/playlist/<playlist_id>')
+@app.route('/playlist/')
 @login_required
-def playlist(country='US', playlist_id=0):
+def playlist():
     cache_handler = spotipy.cache_handler.FlaskSessionCacheHandler(session)
     auth_manager = spotipy.oauth2.SpotifyOAuth(cache_handler=cache_handler)
     # Token expired, or broken, return to sign in page
@@ -95,8 +95,13 @@ def playlist(country='US', playlist_id=0):
         return redirect('/')    
     
     spotify = spotipy.Spotify(auth_manager=auth_manager)
+    # Grab current user's country
+    user_country = spotify.current_user().get('country')
 
-    return 'playlist'
+    # Grab playlist id from url
+    playlist_id = request.args.get('id')
+
+    return playlist_id
 
 @app.errorhandler(404)
 def invalid_route():

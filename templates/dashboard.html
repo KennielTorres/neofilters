@@ -5,6 +5,7 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.0/jquery.min.js"></script>
 <script type="text/javascript">
     jQuery(document).ready(function($){
+        // Live search functionality
         $('#dynamic_table_body tr').each(function(){
             $(this).attr('data-search-term', $(this).text().trim().replace(/\s\s+/g, ' ').toLowerCase());
         });
@@ -23,8 +24,9 @@
 
         });
 
+        // Makes table rows clickable and redirects to playlist page
         $("tr.redirectable").click(function() {
-            window.location = window.location.origin + '/playlist/' + $(this).attr('id');
+            window.location = window.location.origin + '/playlist/?id=' + $(this).attr('id');
         });
 
     });
