@@ -52,7 +52,6 @@ def callback():
     # Validates access token, renews it if expired or broken, and saves it to cache
     cache_handler.save_token_to_cache(auth_manager.validate_token(access_token))
 
-    # extract data from response, access_token example: cache_handler.get_cached_token().get('access_token')
     return redirect('/dashboard')
 
 @app.route('/dashboard')
@@ -86,6 +85,23 @@ def signout():
     session.pop("token_info", None)
     return redirect('/')
 
+@app.route('/playlist/<playlist_id>')
+@login_required
+def playlist(country='US', playlist_id=0):
+    cache_handler = spotipy.cache_handler.FlaskSessionCacheHandler(session)
+    auth_manager = spotipy.oauth2.SpotifyOAuth(cache_handler=cache_handler)
+    # Token expired, or broken, return to sign in page
+    if not auth_manager.validate_token(cache_handler.get_cached_token()):
+        return redirect('/')    
+    
+    spotify = spotipy.Spotify(auth_manager=auth_manager)
+
+    return 'playlist'
+
+@app.errorhandler(404)
+def invalid_route():
+    return '404 Page not found'
+
 @app.route('/testing')
 @login_required
 def testing():
@@ -96,9 +112,14 @@ def testing():
         return redirect('/')    
     
     spotify = spotipy.Spotify(auth_manager=auth_manager)
+    FIELDS = '' #empty to extract actual args
 
-    return 'testing'
+    test_id = '6E1grnrnbXTGP9fDJQMzNb' # dynamic value full code
+    
+    result = spotify.playlist_items(playlist_id=test_id, fields=FIELDS, limit=10, offset=0, market='US', additional_types=['track'])
+    return result
 
+    # return spotify.audio_features(test_id)
 
 if __name__ == "__main__":
     app.run(debug=True, port=8000)

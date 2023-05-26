@@ -16,6 +16,10 @@
     background-color: var(--light-blue);
 }
 
+.pointer {
+    cursor: pointer;
+}
+
 /* Media Queries
 * ------------------------------------------
 *  Responsive Grid Media Queries - 1280, 1024, 768, 480
