@@ -65,10 +65,9 @@ def dashboard():
         return redirect('/')    
     
     spotify = spotipy.Spotify(auth_manager=auth_manager)
-    playlist_limit = 10 #testing, set to 50 once done
     playlists_array = [] # Holds all playlists' data
 
-    playlist_data = spotify.current_user_playlists(playlist_limit)
+    playlist_data = spotify.current_user_playlists()
     # Add playlists to array
     playlists_array = playlist_data.get('items')
 
@@ -98,19 +97,7 @@ def testing():
     
     spotify = spotipy.Spotify(auth_manager=auth_manager)
 
-    playlist_limit = 50
-    playlist_offset = 0
-    playlists_array = []
-
-    playlist_data = spotify.current_user_playlists(playlist_limit, playlist_offset)
-    playlists_array = playlist_data.get('items')
-
-    while playlist_data.get('next'):
-        playlist_data = spotify.next(playlist_data)
-        playlists_array.extend(playlist_data.get('items'))
-
-    # return str(spotify.next(query))
-    return playlists_array[0]
+    return 'testing'
 
 
 if __name__ == "__main__":

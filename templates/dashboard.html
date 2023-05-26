@@ -2,7 +2,6 @@
 
 {% block head %}
 <link rel="stylesheet" href="../static/styles/dashboard.css">
-<script src="../scripts/htmx.min.js"></script>
 {% endblock %}
 
 {% block navclasses %} justify-space-between margin-sides-1 {% endblock%}
@@ -17,11 +16,8 @@
     <h1 class="pos-sticky top-0 bg-lightblue">Welcome, {{ spotify.me().get('display_name') }}</h1>
     <div id="" class="flex justify-space-between margin-sides-1">
         <h3>Playlists</h3>
-        <input type="text" placeholder="Search" maxlength="40">
+        <input type="text" name="search" placeholder="Search" maxlength="40">
     </div>
-    <!-- <div> -->
-        <!-- {{ spotify.current_user_playlists(50) }} -->
-    <!-- </div> -->
     <div class="margin-sides-1">
         <table class="w-100" id="playlist_table">
             <tr>
@@ -31,7 +27,7 @@
             </tr>
             {% for playlist in playlists_array %}
                 <tr class="text-center">
-                    <td><img src="{{playlist.get('images')[0].get('url')}}" width="50px" height="50px" alt="Image for playlist: {{playlist.get('name')}}"></td>
+                    <td><img src="{{ playlist.get('images')[0].get('url') }}" width="50px" height="50px" alt="Image for playlist: {{ playlist.get('name') }}"></td>
                     <td>
                         {{ playlist.get('name')|default('Playlist',true)|truncate(18,true) }}
                     </td>
