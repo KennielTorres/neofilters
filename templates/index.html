@@ -6,6 +6,10 @@
 
 {%block navclasses %} justify-center {% endblock%}
 
+{% block nav %}
+    <a href="{{ url_for('index') }}" class="no-text-decor color-inherit">spotifilters</a>
+{% endblock %}  
+
 {% block content %}
     <div class="flex flex-column align-items-center h-100" id="index_container">
         <div class="flex flex-column justify-center align-items-center margin-bottom-1">

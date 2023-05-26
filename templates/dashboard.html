@@ -27,9 +27,9 @@
 
 {% block navclasses %} justify-space-between margin-sides-1 {% endblock%}
 
-
 {% block nav %}
-<button type="button" title='Sign Out of Spotify.' onclick="window.location.href='signout'">Sign Out</button>
+    <a href="{{ url_for('dashboard') }}" class="no-text-decor color-inherit">spotifilters</a>
+    <button type="button" title='Sign Out of Spotify.' onclick="window.location.href='signout'">Sign Out</button>
 {% endblock %}
 
 {% block content %}

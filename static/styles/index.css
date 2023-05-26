@@ -14,6 +14,7 @@
 @media all and (min-width: 1280px) {
     #index_container {
         max-width: 75%;
+        margin: auto;
         padding: 1rem 2rem 0 2rem;
     }
 }
