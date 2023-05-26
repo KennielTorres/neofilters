@@ -101,6 +101,12 @@ def playlist():
     # Grab playlist id from url
     playlist_id = request.args.get('id')
 
+    # Fields supplied for response / needed data for this app
+    FIELDS = (  'next,'
+                    'items(added_at, added_by.id,'
+                        'track(album(album_type, images, release_date), artists(external_urls.spotify, name), duration_ms, explicit, external_ids.isrc, external_urls.spotify, id, is_local, name, popularity))'
+                )
+    
     return playlist_id
 
 @app.errorhandler(404)
@@ -117,8 +123,12 @@ def testing():
         return redirect('/')    
     
     spotify = spotipy.Spotify(auth_manager=auth_manager)
-    FIELDS = '' #empty to extract actual args
-
+    empty = '' #empty to extract actual args
+    FIELDS = (  'next,'
+                    'items(added_at, added_by.id,'
+                        'track(album(album_type, images, release_date), artists(external_urls.spotify, name), duration_ms, explicit, external_ids.isrc, external_urls.spotify, id, is_local, name, popularity))'
+                )
+    
     test_id = '6E1grnrnbXTGP9fDJQMzNb' # dynamic value full code
     
     result = spotify.playlist_items(playlist_id=test_id, fields=FIELDS, limit=10, offset=0, market='US', additional_types=['track'])
