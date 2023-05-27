@@ -1,7 +1,25 @@
 {% extends 'base.html' %}
 
 {% block head %}
-
+<link rel="stylesheet" href="../static/styles/playlist.css">
+<script>
+    jQuery(document).ready(function($){
+        jQuery('#filter_options').change(function() {
+            if ($(this).val() == 'added_date' || $(this).val() == 'rel_date'){
+                $('#date_container').show()
+                $('#duration_container').hide()
+            }
+            else if ($(this).val() == 'duration'){
+                $('#date_container').hide()
+                $('#duration_container').show()
+            }
+            else {
+                $('#date_container').hide()
+                $('#duration_container').hide()
+            }
+        })
+    });
+</script>
 {% endblock %}
 
 {% block navclasses %} justify-space-between margin-sides-1 {% endblock%}
@@ -12,28 +30,26 @@
 
 {% block content %}
 <div id="playlist_container">
-    <div>
-        <header class="pos-sticky top-0 bg-lightblue flex justify-space-between padding-sides-1">
-            <h1>{{ playlist_details.get('name')|default('Playlist',true) }}</h1>
-            <h2> 
-                {% if playlist_details.get('public') %}
-                    Public
-                {% else %}
-                    Private
-                {% endif %}
-            </h2> 
-        </header>
-        <div class="margin-sides-1">
-            <input type="text" name="track_search" placeholder="Search" maxlength="40">
-
+    <header class="pos-sticky top-0 bg-lightblue flex justify-space-between padding-sides-1">
+        <h1>{{ playlist_details.get('name')|default('Playlist',true) }}</h1>
+        <h2> 
+            {% if playlist_details.get('public') %}
+                Public
+            {% else %}
+                Private
+            {% endif %}
+        </h2> 
+    </header>
+    <div class="margin-sides-1 flex justify-space-between">
+        <input type="text" name="track_search" placeholder="Search" maxlength="40">
+        <div id="main_options_wrapper" class="flex">
             <div id="filtering_container">
                 <label for="filter_options">Filter:</label>
-                <select name="filter_options">
+                <select name="filter_options" id="filter_options">
+                    <option selected value="None">None</option>
                     <optgroup label="Range">
-                        <option selected value="added_date">Added Date</option>
-                        <option value="r_day">Release Day</option>
-                        <option value="r_month">Release Month</option>
-                        <option value="r_year">Release Year</option>
+                        <option value="added_date">Added Date</option>
+                        <option value="rel_date">Release Date</option>
                         <option value="duration">Duration</option>
                     </optgroup>
                     <optgroup label="Rating">
@@ -47,20 +63,6 @@
                 </select>
             </div>
 
-            <div id="date_container">
-                <label for="date_inputs">Date Range</label>
-                <div id="date_inputs">
-                    <input type="date" id="date_selector_lower_bound">
-                    <input type="date" id="date_selector_upper_bound">
-                </div>
-            </div>
-
-            <div id="duration_container">
-                <label for="duration_select">Duration under:</label>
-                <input type="number" value="1" min="1" max="60" id="duration_select" oninput="this.nextElementSibling.value = this.value">
-                <p>minutes</p>
-            </div>
-
             <div id="sorting_container">
                 <label for="sorting_options">Sort:</label>
                 <select name="sorting_options">
@@ -70,6 +72,51 @@
             </div>
         </div>
     </div>
+
+    <div class="flex justify-end w-100 bg-medblue">
+        <div id="date_container" class="hide">
+            <label for="date_inputs">Date</label>
+            <div id="date_inputs" class="inline-flex flex-wrap">
+                <p>From:</p>
+                <input type="date" id="date_selector_lower_bound">
+                <p>To:</p>
+                <input type="date" id="date_selector_upper_bound">
+            </div>
+        </div>
+
+        <div id="duration_container" class="hide">
+            <label for="duration_select_lower_bound">Duration</label>
+            <div id="duration_inputs" class="inline-flex flex-wrap">
+                <p>From:</p>
+                <input type="number" value="0" min="0" max="59" id="duration_select">
+                <p>minutes</p>
+                <p>To:</p>
+                <input type="number" value="1" min="1" max="60" id="duration_select">
+                <p>minutes</p>
+            </div>
+        </div>
+    </div>
+    <main id="track-wrapper">
+
+        <div>
+            <img src="{{ tracks[0].get('track').get('album').get('images')[0].get('url') }}">
+            <h1>{{ tracks[0].get('track').get('name') }}</h1>
+            <h2><a href="{{ tracks[0].get('track').get('artists')[0].get('external_urls').get('spotify') }}" target="_blank" rel="noopener noreferrer">{{ tracks[0].get('track').get('artists')[0].get('name') }}</a></h2>
+            <a>
+                {% if tracks[0].get('track').get('explicit') %}
+                    <img src="../static/icons/explicit_track.svg">
+                {% else %}
+                    nothing
+                {% endif %}
+            </a> 
+            <p>{{ tracks[0].get('track').get('duration_ms') }}</p>
+            <p>Released: {{ tracks[0].get('track').get('album').get('release_date')[:4] }}</p>
+            <p>ISRC: {{ tracks[0].get('track').get('external_ids').get('isrc') }}</p>
+            <p>Added: {{ tracks[0].get('added_at')[:10] }}</p>
+            <p>By: {{ tracks[0].get('added_by').get('id') }}</p>
+            <a href="{{ tracks[0].get('track').get('external_urls').get('spotify') }}" target="_blank" rel="noopener noreferrer"><img src="../static/icons/arrow_up_right.svg"></a>
+        </div>
+    </main>
 </div>
 
 

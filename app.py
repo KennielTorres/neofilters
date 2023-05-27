@@ -6,6 +6,7 @@ import functools
 from flask import Flask, session, request, redirect, render_template, url_for
 import spotipy
 from flask_session import Session
+from utils.utils import process_data
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = os.urandom(64)
@@ -102,27 +103,31 @@ def playlist():
     # Grabs playlist id from url
     playlist_id = request.args.get('id')
 
-    # Fields supplied for response / needed data for this app
+    # Fields supplied for wanted response
     FIELDS = (  'next,'
-                    'items(added_at, added_by.id,'
-                        'track(album(images, release_date), artists(external_urls.spotify, name), duration_ms, explicit, external_ids.isrc, external_urls.spotify, id, is_local, name, popularity))'
+                'items(added_at, added_by.id,'
+                    'track(album(images, release_date), artists(external_urls.spotify, name), duration_ms, explicit, external_ids.isrc, external_urls.spotify, id, is_local, name, popularity))'
                 )
     
+    # Response holding playlist name and public/private status
     playlist_details = spotify.playlist(playlist_id=playlist_id, fields=('name, public'), market=user_country, additional_types=['track'])
 
-    track_items_array = [] # Holds all track items from provided playlist id
+    track_items_list = [] # Holds all track items from provided playlist id
 
-    # Retrieves track objects from provided playlist id
-    playlist_items = spotify.playlist_items(playlist_id=playlist_id, fields=FIELDS, market=user_country, additional_types=['track'])
-    track_items_array = playlist_items.get('items') 
+    # Retrieves tracks from provided playlist id and saves them to 'list'
+    playlist_response = spotify.playlist_items(playlist_id=playlist_id, fields=FIELDS, market=user_country, additional_types=['track'])
+    track_items_list = playlist_response.get('items') 
 
-    # If there are more pages with track objects, add them to list.
-    while playlist_items.get('next'):
-        playlist_items = spotify.next(playlist_items)
-        track_items_array.extend(playlist_items.get('items'))
+    # If there are more pages with tracks, add them to list
+    while playlist_response.get('next'):
+        playlist_response = spotify.next(playlist_response)
+        track_items_list.extend(playlist_response.get('items'))
 
-    # Sort list of track objects by track name
-    track_items_array.sort(key=lambda x:x.get('track').get('name'))
+    # Process list containing all tracks to obtain the final data
+    process_data(spotify, track_items_list)
+
+    # Sort list of tracks by track name
+    track_items_list.sort(key=lambda x:x.get('track').get('name'))
 
     """
         track name = track_items_array[#item_index] || item .get('track').get('name')
@@ -137,7 +142,7 @@ def playlist():
         added to playlist (date:time) = .get('added_at')
         person who added track to playlist = .get('added_by').get('id')
     """
-    return render_template('playlist.html', spotify=spotify, playlist_details=playlist_details, tracks=track_items_array, playlist_id=playlist_id)
+    return render_template('playlist.html', spotify=spotify, playlist_details=playlist_details, tracks=track_items_list)
 
 @app.errorhandler(404)
 def invalid_route():
@@ -153,18 +158,20 @@ def testing():
         return redirect('/')    
     
     spotify = spotipy.Spotify(auth_manager=auth_manager)
-    empty = 'name, public' #empty to extract actual args
+    empty = '' #empty to extract actual args
     FIELDS = (  'next,'
-                    'items(added_at, added_by.id,'
-                        'track(album(album_type, images, release_date), artists(external_urls.spotify, name), duration_ms, explicit, external_ids.isrc, external_urls.spotify, id, is_local, name, popularity))'
+                'items(added_at, added_by.id,'
+                    'track(album(album_type, images, release_date), artists(external_urls.spotify, name), duration_ms, explicit, external_ids.isrc, external_urls.spotify, id, is_local, name, popularity))'
                 )
     
-    test_id = '6E1grnrnbXTGP9fDJQMzNb' # dynamic value full code
-    
-    result = spotify.playlist(playlist_id=test_id, fields=empty, market='US', additional_types=['track'])
+    test_id = '37i9dQZF1EUMDoJuT8yJsl' # dynamic value full code
+    test_arr = []
+    # result = spotify.playlist_items(playlist_id=test_id, limit=2, fields=FIELDS, market='US', additional_types=['track'])
+    result = spotify.playlist_items(playlist_id=test_id, fields=FIELDS, market='US', additional_types=['track'])
+
+
     return result
 
-    # return spotify.audio_features(test_id)
 
 if __name__ == "__main__":
     app.run(debug=True, port=8000)

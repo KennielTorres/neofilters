@@ -24,6 +24,10 @@
     height: 100%;
 }
 
+.margin-auto{
+    margin: auto;
+}
+
 .flex {
     display: flex;
 }
@@ -40,6 +44,10 @@
     justify-content: space-between;
 }
 
+.justify-end {
+    justify-content: end;
+}
+
 .align-items-center {
     align-items: center;
 }
@@ -54,6 +62,18 @@
 
 .flex-column {
     flex-direction: column;
+}
+
+.flex-row {
+    flex-direction: row;
+}
+
+.flex-wrap {
+    flex-wrap: wrap;
+}
+
+.inline-flex {
+    display: inline-flex;
 }
 
 .text-center {
@@ -84,12 +104,20 @@
     background-color: var(--light-blue);
 }
 
+.bg-medblue {
+    background-color: var(--med-blue);
+}
+
 .pointer {
     cursor: pointer;
 }
 
 .padding-sides-1 {
     padding: 0 1rem 0 1rem;
+}
+
+.hide {
+    display: none;
 }
 
 /* Structure styling */
