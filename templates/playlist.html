@@ -1,0 +1,79 @@
+{% extends 'base.html' %}
+
+{% block head %}
+
+{% endblock %}
+
+{% block navclasses %} justify-space-between margin-sides-1 {% endblock%}
+{% block nav %}
+    <a href="{{ url_for('dashboard') }}" class="no-text-decor color-inherit">spotifilters</a>
+    {% include 'signout_btn.html' %}
+{% endblock %}
+
+{% block content %}
+<div id="playlist_container">
+    <div>
+        <header class="pos-sticky top-0 bg-lightblue flex justify-space-between padding-sides-1">
+            <h1>{{ playlist_details.get('name')|default('Playlist',true) }}</h1>
+            <h2> 
+                {% if playlist_details.get('public') %}
+                    Public
+                {% else %}
+                    Private
+                {% endif %}
+            </h2> 
+        </header>
+        <div class="margin-sides-1">
+            <input type="text" name="track_search" placeholder="Search" maxlength="40">
+
+            <div id="filtering_container">
+                <label for="filter_options">Filter:</label>
+                <select name="filter_options">
+                    <optgroup label="Range">
+                        <option selected value="added_date">Added Date</option>
+                        <option value="r_day">Release Day</option>
+                        <option value="r_month">Release Month</option>
+                        <option value="r_year">Release Year</option>
+                        <option value="duration">Duration</option>
+                    </optgroup>
+                    <optgroup label="Rating">
+                        <option value="explicit">Explicit</option>
+                        <option value="clean">Clean</option>
+                    </optgroup>
+                    <optgroup label="Extra">
+                        <option value="isrc">ISRC</option>
+                        <option value="added_by">Added By</option>
+                    </optgroup>
+                </select>
+            </div>
+
+            <div id="date_container">
+                <label for="date_inputs">Date Range</label>
+                <div id="date_inputs">
+                    <input type="date" id="date_selector_lower_bound">
+                    <input type="date" id="date_selector_upper_bound">
+                </div>
+            </div>
+
+            <div id="duration_container">
+                <label for="duration_select">Time:</label>
+                <input type="range" value="1" min="1" max="60" id="duration_select" oninput="this.nextElementSibling.value = this.value">
+                <output>1</output> 
+                <p>minutes</p>
+            </div>
+
+            <div id="sorting_container">
+                <label for="sorting_options">Sort:</label>
+                <select name="sorting_options">
+                    <option selected value="ascending">Ascending</option>
+                    <option value="descending">Descending</option>
+                </select>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+{% endblock %}

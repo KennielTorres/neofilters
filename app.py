@@ -70,7 +70,7 @@ def dashboard():
     # Add playlists to array
     playlists_array = playlist_data.get('items')
 
-    # If there are more pages with playlists, add them to array.
+    # If there are more pages with playlists, add them to list.
     while playlist_data.get('next'):
         playlist_data = spotify.next(playlist_data)
         playlists_array.extend(playlist_data.get('items'))
@@ -95,19 +95,49 @@ def playlist():
         return redirect('/')    
     
     spotify = spotipy.Spotify(auth_manager=auth_manager)
-    # Grab current user's country
+
+    # Grabs current user's country
     user_country = spotify.current_user().get('country')
 
-    # Grab playlist id from url
+    # Grabs playlist id from url
     playlist_id = request.args.get('id')
 
     # Fields supplied for response / needed data for this app
     FIELDS = (  'next,'
                     'items(added_at, added_by.id,'
-                        'track(album(album_type, images, release_date), artists(external_urls.spotify, name), duration_ms, explicit, external_ids.isrc, external_urls.spotify, id, is_local, name, popularity))'
+                        'track(album(images, release_date), artists(external_urls.spotify, name), duration_ms, explicit, external_ids.isrc, external_urls.spotify, id, is_local, name, popularity))'
                 )
     
-    return playlist_id
+    playlist_details = spotify.playlist(playlist_id=playlist_id, fields=('name, public'), market=user_country, additional_types=['track'])
+
+    track_items_array = [] # Holds all track items from provided playlist id
+
+    # Retrieves track objects from provided playlist id
+    playlist_items = spotify.playlist_items(playlist_id=playlist_id, fields=FIELDS, market=user_country, additional_types=['track'])
+    track_items_array = playlist_items.get('items') 
+
+    # If there are more pages with track objects, add them to list.
+    while playlist_items.get('next'):
+        playlist_items = spotify.next(playlist_items)
+        track_items_array.extend(playlist_items.get('items'))
+
+    # Sort list of track objects by track name
+    track_items_array.sort(key=lambda x:x.get('track').get('name'))
+
+    """
+        track name = track_items_array[#item_index] || item .get('track').get('name')
+        track url = .get('track').get('external_urls').get('spotify')
+        track artwork = .get('track').get('album').get('images')[0].get('url')
+        track artist/s = .get('track').get('artists')[#artist_index].get('name')
+        artist/s url = .get('track').get('artists')[0].get('external_urls').get('spotify')
+        duration in ms = .get('track').get('duration_ms')
+        explicit = .get('track').get('explicit') 
+        release date = .get('track').get('album').get('release_date')
+        isrc = .get('track').get('external_ids').get('isrc')
+        added to playlist (date:time) = .get('added_at')
+        person who added track to playlist = .get('added_by').get('id')
+    """
+    return render_template('playlist.html', spotify=spotify, playlist_details=playlist_details, tracks=track_items_array, playlist_id=playlist_id)
 
 @app.errorhandler(404)
 def invalid_route():
@@ -123,7 +153,7 @@ def testing():
         return redirect('/')    
     
     spotify = spotipy.Spotify(auth_manager=auth_manager)
-    empty = '' #empty to extract actual args
+    empty = 'name, public' #empty to extract actual args
     FIELDS = (  'next,'
                     'items(added_at, added_by.id,'
                         'track(album(album_type, images, release_date), artists(external_urls.spotify, name), duration_ms, explicit, external_ids.isrc, external_urls.spotify, id, is_local, name, popularity))'
@@ -131,7 +161,7 @@ def testing():
     
     test_id = '6E1grnrnbXTGP9fDJQMzNb' # dynamic value full code
     
-    result = spotify.playlist_items(playlist_id=test_id, fields=FIELDS, limit=10, offset=0, market='US', additional_types=['track'])
+    result = spotify.playlist(playlist_id=test_id, fields=empty, market='US', additional_types=['track'])
     return result
 
     # return spotify.audio_features(test_id)

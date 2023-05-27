@@ -68,6 +68,29 @@
     align-self: center;
 }
 
+.margin-sides-1 {
+    margin: 0 1rem 0 1rem;
+}
+
+.pos-sticky {
+    position: sticky;
+}
+
+.top-0 {
+    top: 0;
+}
+
+.bg-lightblue {
+    background-color: var(--light-blue);
+}
+
+.pointer {
+    cursor: pointer;
+}
+
+.padding-sides-1 {
+    padding: 0 1rem 0 1rem;
+}
 
 /* Structure styling */
 #body_container {

@@ -2,7 +2,6 @@
 
 {% block head %}
 <link rel="stylesheet" href="../static/styles/dashboard.css">
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.0/jquery.min.js"></script>
 <script type="text/javascript">
     jQuery(document).ready(function($){
         // Live search functionality
@@ -39,7 +38,7 @@
 
 {% block nav %}
     <a href="{{ url_for('dashboard') }}" class="no-text-decor color-inherit">spotifilters</a>
-    <button type="button" title='Sign Out of Spotify.' onclick="window.location.href='signout'">Sign Out</button>
+    {% include 'signout_btn.html' %}
 {% endblock %}
 
 {% block content %}
@@ -47,7 +46,7 @@
     <h1 class="pos-sticky top-0 bg-lightblue">Welcome, {{ spotify.me().get('display_name') }}</h1>
     <div id="" class="flex justify-space-between margin-sides-1">
         <h3>Playlists</h3>
-        <input type="text" id="live-search-input" name="search" placeholder="Search" maxlength="40">
+        <input type="text" id="live-search-input" name="playlist_search" placeholder="Search" maxlength="40">
     </div>
     <div class="margin-sides-1">
         <table class="w-100" id="playlist_table">
