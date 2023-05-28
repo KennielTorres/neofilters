@@ -30,7 +30,7 @@
 
 {% block content %}
 <div id="playlist_container">
-    <header class="pos-sticky top-0 bg-lightblue flex justify-space-between padding-sides-1">
+    <header id="playlist_cont_header" class="pos-sticky top-0 bg-lightblue flex justify-space-between padding-sides-1">
         <h1>{{ playlist_details.get('name')|default('Playlist',true) }}</h1>
         <h2> 
             {% if playlist_details.get('public') %}
@@ -58,7 +58,7 @@
                     </optgroup>
                     <optgroup label="Extra">
                         <option value="isrc">ISRC</option>
-                        <option value="added_by">Added By</option>
+                        <option value="popularity">Popularity</option>
                     </optgroup>
                 </select>
             </div>
@@ -127,7 +127,7 @@
     
                 <tr>
                     <td>
-                        <p id="rel_date">Released: {{ track.get('track').get('album').get('release_date') }}</p>
+                        <p id="rel_date" title="In ISO 8601 format.">Released: {{ track.get('track').get('album').get('release_date') }}</p>
                     </td>
                     <td>
                         <p id="isrc">ISRC: {{ track.get('track').get('external_ids').get('isrc') }}</p>
@@ -146,10 +146,10 @@
                         </div> 
                     </td>
                     <td>
-                        <p id="added_date">Added: {{ track.get('added_at')[:10] }}</p>
+                        <p id="added_date" title="In ISO 8601 format.">Added: {{ track.get('added_at')[:10] }}</p>
                     </td>
                     <td>
-                        <p id="added_by">By: {{ track.get('added_by').get('id') }}</p>
+                        <p id="popularity">Popularity: {{ track.get('track').get('popularity') }}</p>
                     </td>
                 </tr>
                 
