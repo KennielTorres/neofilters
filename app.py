@@ -105,8 +105,8 @@ def playlist():
 
     # Fields supplied for wanted response
     FIELDS = (  'next,'
-                'items(added_at, added_by.id,'
-                    'track(album(images, release_date), artists(external_urls.spotify, name), duration_ms, explicit, external_ids.isrc, external_urls.spotify, id, is_local, name, popularity, restrictions))'
+                'items(added_at,'
+                    'track(album(images, release_date), artists(external_urls.spotify, name), duration_ms, explicit, external_ids.isrc, external_urls.spotify, id, name, popularity))'
                 )
     
     # Response holding playlist name and public/private status
@@ -124,7 +124,7 @@ def playlist():
         track_items_list.extend(playlist_response.get('items'))
 
     # Process list containing all tracks to obtain the final data
-    process_data(spotify, track_items_list)
+    process_data(track_items_list)
 
     # Sort list of tracks by track name
     track_items_list.sort(key=lambda x:x.get('track').get('name'))
@@ -140,7 +140,7 @@ def playlist():
         release date = .get('track').get('album').get('release_date')
         isrc = .get('track').get('external_ids').get('isrc')
         added to playlist (date:time) = .get('added_at')
-        person who added track to playlist = .get('added_by').get('id')
+        popularity = .get('track').get('popularity')
     """
     return render_template('playlist.html', spotify=spotify, playlist_details=playlist_details, tracks=track_items_list)
 
@@ -160,21 +160,17 @@ def testing():
     spotify = spotipy.Spotify(auth_manager=auth_manager)
     empty = '' #empty to extract actual args
     FIELDS = (  'next,'
-                'items(added_at, added_by.id,'
-                    'track(album(album_type, images, release_date), artists(external_urls.spotify, name), duration_ms, explicit, external_ids.isrc, external_urls.spotify, id, is_local, name, popularity, restrictions))'
+                'items(added_at,'
+                    'track(album(album_type, images, release_date), artists(external_urls.spotify, name), duration_ms, explicit, external_ids.isrc, external_urls.spotify, id, name, popularity))'
                 )
     
-    test_id = '7yjDN2E86axLlQNi8NsGux' # dynamic value full code
-    test_arr = []
-    # result = spotify.playlist_items(playlist_id=test_id, limit=2, fields=FIELDS, market='US', additional_types=['track'])
+    test_id = '7yjDN2E86axLlQNi8NsGux' # dynamic value in full code
     result = spotify.playlist_items(playlist_id=test_id, fields=FIELDS, market='US', additional_types=['track'])
 
     item = result.get('items')[1]
 
-    # return render_template('testing.html', item=item)
-    return str(item.get('track').get('restrictions') in item.get('track'))
-    # return item.get('track').get('restrictions')
-    # return item
+    return render_template('testing.html', item=item)
+
 
 if __name__ == "__main__":
     app.run(debug=True, port=8000)

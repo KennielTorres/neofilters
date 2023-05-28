@@ -82,8 +82,12 @@
 
 }
 
-#added_by {
+#popularity {
 
+}
+
+#playlist_cont_header {
+    z-index: 2;
 }
 
 /* Media Queries
