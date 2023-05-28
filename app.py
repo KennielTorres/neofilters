@@ -169,8 +169,9 @@ def testing():
     # result = spotify.playlist_items(playlist_id=test_id, limit=2, fields=FIELDS, market='US', additional_types=['track'])
     result = spotify.playlist_items(playlist_id=test_id, fields=FIELDS, market='US', additional_types=['track'])
 
+    item = result.get('items')[1]
 
-    return result
+    return render_template('testing.html', item=item)
 
 
 if __name__ == "__main__":

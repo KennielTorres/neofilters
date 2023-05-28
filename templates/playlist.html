@@ -96,27 +96,68 @@
             </div>
         </div>
     </div>
-    <main id="track-wrapper">
 
-        <div>
-            <img src="{{ tracks[0].get('track').get('album').get('images')[0].get('url') }}">
-            <h1>{{ tracks[0].get('track').get('name') }}</h1>
-            <h2><a href="{{ tracks[0].get('track').get('artists')[0].get('external_urls').get('spotify') }}" target="_blank" rel="noopener noreferrer">{{ tracks[0].get('track').get('artists')[0].get('name') }}</a></h2>
-            <a>
-                {% if tracks[0].get('track').get('explicit') %}
-                    <img src="../static/icons/explicit_track.svg">
-                {% else %}
-                    nothing
-                {% endif %}
-            </a> 
-            <p>{{ tracks[0].get('track').get('duration_ms') }}</p>
-            <p>Released: {{ tracks[0].get('track').get('album').get('release_date')[:4] }}</p>
-            <p>ISRC: {{ tracks[0].get('track').get('external_ids').get('isrc') }}</p>
-            <p>Added: {{ tracks[0].get('added_at')[:10] }}</p>
-            <p>By: {{ tracks[0].get('added_by').get('id') }}</p>
-            <a href="{{ tracks[0].get('track').get('external_urls').get('spotify') }}" target="_blank" rel="noopener noreferrer"><img src="../static/icons/arrow_up_right.svg"></a>
+    <main id="track-wrapper">
+        {% for track in tracks %}
+        <div id="track-card">
+            <table id="track-card-table" class="bg-lightblue margin-sides-1 align-items-center">
+                <col id="col1"/>
+                <col id="col2"/>
+                <col id="col3"/>
+                <col id="col4"/>
+                <tr>
+                    <td colspan="2" rowspan="2">
+                        {% if track.get('track').get('album').get('images')|length > 0 %}
+                            <img class="picture-1" id="art" src="{{ track.get('track').get('album').get('images')[0].get('url') }}">
+                        {% else %}
+                            <img class="picture-1" id="art" src="../static/icons/black_square.svg">
+                        {% endif %}
+                    </td>
+                    <td>
+                        <h1 id="track_name"><a href="{{ track.get('track').get('external_urls').get('spotify') }}" target="_blank" rel="noopener noreferrer">{{ track.get('track').get('name') }}</a></h1>
+                    </td>
+                    <td>
+                        <div id="artists">
+                            {% for artist in track.get('track').get('artists') %}
+                                <h2><a href="{{ artist.get('external_urls').get('spotify') }}" target="_blank" rel="noopener noreferrer">{{ artist.get('name') }}</a></h2>
+                            {% endfor %}
+                        </div>
+                    </td>
+                </tr>
+    
+                <tr>
+                    <td>
+                        <p id="rel_date">Released: {{ track.get('track').get('album').get('release_date') }}</p>
+                    </td>
+                    <td>
+                        <p id="isrc">ISRC: {{ track.get('track').get('external_ids').get('isrc') }}</p>
+                    </td>
+                </tr>
+    
+                <tr>
+                    <td>
+                        <p id="duration" class="text-center">{{ track.get('track').get('duration_ms') }}</p>
+                    </td>
+                    <td>
+                        <div id="rating" class="text-center">
+                            {% if track.get('track').get('explicit') %}
+                                <img src="../static/icons/explicit_track.svg">
+                            {% endif %}
+                        </div> 
+                    </td>
+                    <td>
+                        <p id="added_date">Added: {{ track.get('added_at')[:10] }}</p>
+                    </td>
+                    <td>
+                        <p id="added_by">By: {{ track.get('added_by').get('id') }}</p>
+                    </td>
+                </tr>
+                
+            </table>
         </div>
+        {% endfor %}
     </main>
+
 </div>
 
 
