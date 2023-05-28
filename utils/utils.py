@@ -10,7 +10,7 @@ def process_data(spotify, items):
         minutes = duration_ms // 60000
         seconds = (duration_ms % 60000) // 1000
         item['track']['duration_ms'] = f"{minutes}:{seconds:02d}"
-        
+
         if (len(item['added_by']['id']) < 1):
             item['added_by']['id'] = '' #  No user id was provided in 'added_by'
         else:

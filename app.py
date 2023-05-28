@@ -106,7 +106,7 @@ def playlist():
     # Fields supplied for wanted response
     FIELDS = (  'next,'
                 'items(added_at, added_by.id,'
-                    'track(album(images, release_date), artists(external_urls.spotify, name), duration_ms, explicit, external_ids.isrc, external_urls.spotify, id, is_local, name, popularity))'
+                    'track(album(images, release_date), artists(external_urls.spotify, name), duration_ms, explicit, external_ids.isrc, external_urls.spotify, id, is_local, name, popularity, restrictions))'
                 )
     
     # Response holding playlist name and public/private status
@@ -161,18 +161,20 @@ def testing():
     empty = '' #empty to extract actual args
     FIELDS = (  'next,'
                 'items(added_at, added_by.id,'
-                    'track(album(album_type, images, release_date), artists(external_urls.spotify, name), duration_ms, explicit, external_ids.isrc, external_urls.spotify, id, is_local, name, popularity))'
+                    'track(album(album_type, images, release_date), artists(external_urls.spotify, name), duration_ms, explicit, external_ids.isrc, external_urls.spotify, id, is_local, name, popularity, restrictions))'
                 )
     
-    test_id = '37i9dQZF1EUMDoJuT8yJsl' # dynamic value full code
+    test_id = '7yjDN2E86axLlQNi8NsGux' # dynamic value full code
     test_arr = []
     # result = spotify.playlist_items(playlist_id=test_id, limit=2, fields=FIELDS, market='US', additional_types=['track'])
     result = spotify.playlist_items(playlist_id=test_id, fields=FIELDS, market='US', additional_types=['track'])
 
     item = result.get('items')[1]
 
-    return render_template('testing.html', item=item)
-
+    # return render_template('testing.html', item=item)
+    return str(item.get('track').get('restrictions') in item.get('track'))
+    # return item.get('track').get('restrictions')
+    # return item
 
 if __name__ == "__main__":
     app.run(debug=True, port=8000)
