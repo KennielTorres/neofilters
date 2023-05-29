@@ -4,6 +4,7 @@
 <link rel="stylesheet" href="../static/styles/playlist.css">
 <script>
     jQuery(document).ready(function($){
+        // Shows or hides filtering containers based on selection
         jQuery('#filter_options').change(function() {
             if ($(this).val() == 'added_date' || $(this).val() == 'rel_date'){
                 $('#date_container').show()
@@ -17,7 +18,26 @@
                 $('#date_container').hide()
                 $('#duration_container').hide()
             }
-        })
+        });
+
+        // Live search functionality
+        $('#track-wrapper > #track-card').each(function(){
+            $(this).attr('data-search-terms', $(this).find('#track_name, #artists').text().trim().replace(/\s\s+/g, ' ').toLowerCase());
+        });
+
+        $('#live-search-input').on('keyup', function(){
+            var searchTerm = $(this).val().trim().toLowerCase();
+            $('#track-wrapper > #track-card').each(function(){
+                if ($(this).filter('[data-search-terms*="' + searchTerm + '"]').length > 0 || searchTerm.length < 1) {
+                    $(this).show();
+                } 
+                else {
+                    $(this).hide();
+                }
+            });
+        });
+
+
     });
 </script>
 {% endblock %}
@@ -41,7 +61,10 @@
         </h2> 
     </header>
     <div class="margin-sides-1 flex justify-space-between">
-        <input type="text" name="track_search" placeholder="Search" maxlength="40">
+        <div>
+            <label for="#live-search-input">Search</label>
+            <input id="live-search-input" type="text" name="track_search" placeholder="Name or Artist/s" maxlength="40">
+        </div>
         <div id="main_options_wrapper" class="flex">
             <div id="filtering_container">
                 <label for="filter_options">Filter:</label>
@@ -66,7 +89,8 @@
             <div id="sorting_container">
                 <label for="sorting_options">Sort:</label>
                 <select name="sorting_options">
-                    <option selected value="ascending">Ascending</option>
+                    <option selected value="None">None</option>
+                    <option value="ascending">Ascending</option>
                     <option value="descending">Descending</option>
                 </select>
             </div>
@@ -99,7 +123,10 @@
 
     <main id="track-wrapper">
         {% for track in tracks %}
-        <div id="track-card">
+        <div id="track-card" 
+                data-id="{{ loop.index }}"
+                data-explicit="{{ track.get('track').get('explicit') }}"
+                >
             <table id="track-card-table" class="bg-lightblue margin-sides-1 align-items-center">
                 <col id="col1"/>
                 <col id="col2"/>
@@ -119,7 +146,7 @@
                     <td>
                         <div id="artists">
                             {% for artist in track.get('track').get('artists') %}
-                                <h2><a href="{{ artist.get('external_urls').get('spotify') }}" target="_blank" rel="noopener noreferrer">{{ artist.get('name') }}</a></h2>
+                                <h2 id="artist-{{ loop.index }}"><a href="{{ artist.get('external_urls').get('spotify') }}" target="_blank" rel="noopener noreferrer">{{ artist.get('name') }}</a></h2>
                             {% endfor %}
                         </div>
                     </td>

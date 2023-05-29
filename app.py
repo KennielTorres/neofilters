@@ -126,9 +126,6 @@ def playlist():
     # Process list containing all tracks to obtain the final data
     process_data(track_items_list)
 
-    # Sort list of tracks by track name
-    track_items_list.sort(key=lambda x:x.get('track').get('name'))
-
     """
         track name = track_items_array[#item_index] || item .get('track').get('name')
         track url = .get('track').get('external_urls').get('spotify')
