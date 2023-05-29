@@ -4,19 +4,44 @@
 <link rel="stylesheet" href="../static/styles/playlist.css">
 <script>
     jQuery(document).ready(function($){
+        var explicitTracks = $("[data-explicit='True']")
+        var cleanTracks = $("[data-explicit='False']")
+
         // Shows or hides filtering containers based on selection
-        jQuery('#filter_options').change(function() {
-            if ($(this).val() == 'added_date' || $(this).val() == 'rel_date'){
+        $('#filter_options').change(function() {
+            var selected = $(this).val()
+
+            if (selected == 'added_date' || selected == 'rel_date'){
                 $('#date_container').show()
                 $('#duration_container').hide()
             }
-            else if ($(this).val() == 'duration'){
+            else if (selected == 'duration'){
                 $('#date_container').hide()
                 $('#duration_container').show()
             }
+            else if (selected == 'explicit'){
+                $('#date_container').hide()
+                $('#duration_container').hide()
+                
+                $('#track-wrapper > #track-card').each(function(){
+                    explicitTracks.show()
+                    cleanTracks.hide()
+                })
+            }
+            else if (selected == 'clean'){
+                $('#date_container').hide()
+                $('#duration_container').hide()
+                
+                $('#track-wrapper > #track-card').each(function(){
+                    cleanTracks.show()
+                    explicitTracks.hide()
+                })
+            } 
             else {
                 $('#date_container').hide()
                 $('#duration_container').hide()
+                explicitTracks.show()
+                cleanTracks.show()
             }
         });
 
