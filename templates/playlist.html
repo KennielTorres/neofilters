@@ -43,7 +43,7 @@
         };
 
         // Performs the sorting based on option selected
-        $("select[name='sorting_options']").on("change", function() {
+        $("select[name='sorting_options']").change(function() {
             var sortingOption = $(this).val()
             sortTrackCards(sortingOption)
         });
@@ -55,14 +55,19 @@
             if (selected == 'added_date' || selected == 'rel_date'){
                 $('#date_container').show()
                 $('#duration_container').hide()
+                $('#isrc_container').hide()
+
             }
             else if (selected == 'duration'){
-                $('#date_container').hide()
                 $('#duration_container').show()
+                $('#date_container').hide()
+                $('#isrc_container').hide()
+                
             }
             else if (selected == 'explicit'){
                 $('#date_container').hide()
                 $('#duration_container').hide()
+                $('#isrc_container').hide()
                 
                 $('#track-wrapper > #track-card').each(function(){
                     explicitTracks.show()
@@ -72,15 +77,23 @@
             else if (selected == 'clean'){
                 $('#date_container').hide()
                 $('#duration_container').hide()
+                $('#isrc_container').hide()
                 
                 $('#track-wrapper > #track-card').each(function(){
                     cleanTracks.show()
                     explicitTracks.hide()
                 })
             } 
+            else if (selected == 'isrc'){
+                $('#isrc_container').show()
+                $('#date_container').hide()
+                $('#duration_container').hide()
+
+            }
             else {
                 $('#date_container').hide()
                 $('#duration_container').hide()
+                $('#isrc_container').hide()
                 explicitTracks.show()
                 cleanTracks.show()
             }
@@ -89,12 +102,27 @@
         // Live search functionality
         $('#track-wrapper > #track-card').each(function(){
             $(this).attr('data-search-terms', $(this).find('#track_name, #artists').text().trim().replace(/\s\s+/g, ' ').toLowerCase());
+            $(this).attr('data-isrc', $(this).find('#isrc').text().substring(6))
         });
-
+        
+        // Name or artist search
         $('#live-search-input').on('keyup', function(){
             var searchTerm = $(this).val().trim().toLowerCase();
             $('#track-wrapper > #track-card').each(function(){
                 if ($(this).filter('[data-search-terms*="' + searchTerm + '"]').length > 0 || searchTerm.length < 1) {
+                    $(this).show();
+                } 
+                else {
+                    $(this).hide();
+                }
+            });
+        });
+
+        // ISRC search
+        $('#live_isrc_input').on('keyup', function(){
+            var searchTerm = $(this).val().trim().toUpperCase();
+            $('#track-wrapper > #track-card').each(function(){
+                if ($(this).filter('[data-isrc*="' + searchTerm + '"]').length > 0 || searchTerm.length < 1) {
                     $(this).show();
                 } 
                 else {
@@ -184,6 +212,11 @@
                 <input type="number" value="1" min="1" max="60" id="duration_select">
                 <p>minutes</p>
             </div>
+        </div>
+
+        <div id="isrc_container" class="hide">
+            <label for="isrc_input">Search</label>
+            <input id="live_isrc_input" name="isrc_input" type="text" placeholder="ISRC" maxlength="12">
         </div>
     </div>
 
