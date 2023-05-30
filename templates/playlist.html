@@ -29,9 +29,24 @@
                     return (trackNameA > trackNameB) ? -1 : (trackNameA < trackNameB) ? 1 : 0;
                 } 
             })
+
+            trackCards.sort(function(a, b) {
+                var popularityA = parseInt($(a).find("#popularity").text().substring(12))
+                var popularityB = parseInt($(b).find("#popularity").text().substring(12))
+
+                if (sortingOption == "lowest") {
+                    return popularityA - popularityB
+                } 
+                else if (sortingOption == "highest") {
+                    return popularityB - popularityA
+                }
+            });
         
             // If a sorting option is selected, display items sorted accordingly
-            if (sortingOption == "ascending" || sortingOption == "descending"){
+            if (sortingOption == "ascending" 
+                || sortingOption == "descending"
+                || sortingOption == "highest"
+                || sortingOption == "lowest" ){
                 $("#track-wrapper").empty()
                 $("#track-wrapper").append(trackCards)
             }
@@ -56,18 +71,27 @@
                 $('#date_container').show()
                 $('#duration_container').hide()
                 $('#isrc_container').hide()
+                $('#popularity_container').hide()
+
+                $('optgroup[label="Numerical"]').hide()
 
             }
             else if (selected == 'duration'){
                 $('#duration_container').show()
                 $('#date_container').hide()
                 $('#isrc_container').hide()
-                
+                $('#popularity_container').hide()
+
+                $('optgroup[label="Numerical"]').hide()
+
             }
             else if (selected == 'explicit'){
                 $('#date_container').hide()
                 $('#duration_container').hide()
                 $('#isrc_container').hide()
+                $('#popularity_container').hide()
+
+                $('optgroup[label="Numerical"]').hide()
                 
                 $('#track-wrapper > #track-card').each(function(){
                     explicitTracks.show()
@@ -78,6 +102,9 @@
                 $('#date_container').hide()
                 $('#duration_container').hide()
                 $('#isrc_container').hide()
+                $('#popularity_container').hide()
+
+                $('optgroup[label="Numerical"]').hide()
                 
                 $('#track-wrapper > #track-card').each(function(){
                     cleanTracks.show()
@@ -88,12 +115,24 @@
                 $('#isrc_container').show()
                 $('#date_container').hide()
                 $('#duration_container').hide()
+                $('#popularity_container').hide()
 
+                $('optgroup[label="Numerical"]').hide()
+            }
+            else if (selected == 'popularity'){
+                $('#popularity_container').show()
+                $('#date_container').hide()
+                $('#duration_container').hide()
+                $('#isrc_container').hide()
+
+                $('optgroup[label="Numerical"]').show()
             }
             else {
                 $('#date_container').hide()
                 $('#duration_container').hide()
                 $('#isrc_container').hide()
+                $('#popularity_container').hide()
+                $('optgroup[label="Numerical"]').hide()
                 explicitTracks.show()
                 cleanTracks.show()
             }
@@ -131,6 +170,33 @@
             });
         });
 
+        // Popularity search lower bound
+        $('#pop_select_low').change(function() {
+            var lowValue = parseInt($(this).val())
+            $('#track-wrapper > #track-card').each(function(){
+                trackPopularity = parseInt($(this).find('#popularity').text().substring(12))
+                if (trackPopularity >= lowValue && trackPopularity <= parseInt($('#pop_select_high').val()) ){
+                    $(this).show()
+                }
+                else {
+                    $(this).hide()
+                }
+            })
+        });
+
+        // Popularity search upper bound
+        $('#pop_select_high').change(function() {
+            var highValue = parseInt($(this).val())
+            $('#track-wrapper > #track-card').each(function(){
+                trackPopularity = parseInt($(this).find('#popularity').text().substring(12))
+                if (trackPopularity <= highValue && trackPopularity >= parseInt($('#pop_select_low').val())){
+                    $(this).show()
+                }
+                else {
+                    $(this).hide()
+                }
+            })
+        });
 
     });
 </script>
@@ -184,8 +250,14 @@
                 <label for="sorting_options">Sort:</label>
                 <select name="sorting_options">
                     <option selected value="None">None</option>
-                    <option value="ascending">A-Z</option>
-                    <option value="descending">Z-A</option>
+                    <optgroup label="Alphabetical">
+                        <option value="ascending">A-Z</option>
+                        <option value="descending">Z-A</option>
+                    </optgroup>
+                    <optgroup label="Numerical" class="hide">
+                        <option value="highest">Highest First</option>
+                        <option value="lowest">Lowest First</option>
+                    </optgroup>
                 </select>
             </div>
         </div>
@@ -203,13 +275,13 @@
         </div>
 
         <div id="duration_container" class="hide">
-            <label for="duration_select_lower_bound">Duration</label>
+            <label for="duration_inputs">Duration</label>
             <div id="duration_inputs" class="inline-flex flex-wrap">
                 <p>From:</p>
-                <input type="number" value="0" min="0" max="59" id="duration_select">
+                <input type="number" value="0" min="0" max="59" id="duration_select_low">
                 <p>minutes</p>
                 <p>To:</p>
-                <input type="number" value="1" min="1" max="60" id="duration_select">
+                <input type="number" value="1" min="1" max="60" id="duration_select_high">
                 <p>minutes</p>
             </div>
         </div>
@@ -218,6 +290,17 @@
             <label for="isrc_input">Search</label>
             <input id="live_isrc_input" name="isrc_input" type="text" placeholder="ISRC" maxlength="12">
         </div>
+
+        <div id="popularity_container" class="hide">
+            <label for="popularity_inputs">Popularity</label>
+            <div id="popularity_inputs" class="inline-flex flex-wrap">
+                <p>From:</p>
+                <input value="0" min="0" max="99" type="number" id="pop_select_low" onKeyDown="return false">
+                <p>To:</p>
+                <input value="100" min="1" max="100" type="number" id="pop_select_high" onKeyDown="return false">
+            </div>
+        </div>
+
     </div>
 
     <main id="track-wrapper">
