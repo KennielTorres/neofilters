@@ -13,6 +13,12 @@
             originalTrackOrder.push($(this))
         });
 
+        // Function that resets track cards to original order
+        function restoreElementsToOriginal() {
+            console.log('element reset')
+            $("#track-wrapper").empty()
+            $("#track-wrapper").append(originalTrackOrder)
+        };
 
         // Function to sort the track cards
         function sortTrackCards(sortingOption) {
@@ -40,7 +46,7 @@
                 else if (sortingOption == "highest") {
                     return popularityB - popularityA
                 }
-            });
+            })
         
             // If a sorting option is selected, display items sorted accordingly
             if (sortingOption == "ascending" 
@@ -52,8 +58,7 @@
             }
             // Display items are they were obtained from response (original)
             else {
-                $("#track-wrapper").empty()
-                $("#track-wrapper").append(originalTrackOrder)
+                restoreElementsToOriginal()
             }
         };
 
@@ -198,6 +203,15 @@
             })
         });
 
+        // Reset popularity sorting input values and restore elements
+        $('#popularity_reset_btn').click(function() {
+            console.log('pop reset')
+            $("#pop_select_low").val(0);
+            $("#pop_select_high").val(100);
+            $("select[name='filter_options']").val('None')
+            restoreElementsToOriginal()
+        });
+
     });
 </script>
 {% endblock %}
@@ -298,6 +312,7 @@
                 <input value="0" min="0" max="99" type="number" id="pop_select_low" onKeyDown="return false">
                 <p>To:</p>
                 <input value="100" min="1" max="100" type="number" id="pop_select_high" onKeyDown="return false">
+                <button id="popularity_reset_btn" type="button">Reset</button>
             </div>
         </div>
 
