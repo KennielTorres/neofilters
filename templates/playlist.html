@@ -7,6 +7,52 @@
         var explicitTracks = $("[data-explicit='True']")
         var cleanTracks = $("[data-explicit='False']")
 
+        // Store the original order of the track cards
+        var originalTrackOrder = []; 
+        // originalTrackOrder.push($("#track-wrapper").children())
+        $('#track-wrapper > #track-card').each(function() {
+            originalTrackOrder.push($(this))
+        });
+        console.log("og order", originalTrackOrder)
+        // UNTIL ABOVE IT WORKS
+
+        // Function to reset the track cards to the original order. NEEDS SOME TWEAKING, NOT DOING ANYTHING<><><><>
+        function resetTrackCards() {
+            $("#track-wrapper").empty()
+            $("#track-wrapper").append(originalTrackOrder)
+        };
+
+        // Function to sort the track cards
+        function sortTrackCards(sortingOption) {
+            var trackCards = $("#track-wrapper").children()
+            console.log("trackCards", trackCards)
+            
+            trackCards.sort(function(a, b) {
+                var trackNameA = $(a).find("#track_name").text().toUpperCase()
+                var trackNameB = $(b).find("#track_name").text().toUpperCase()
+
+                if (sortingOption == "ascending") {
+                    return (trackNameA < trackNameB) ? -1 : (trackNameA > trackNameB) ? 1 : 0;
+                } else if (sortingOption == "descending") {
+                    return (trackNameA > trackNameB) ? -1 : (trackNameA < trackNameB) ? 1 : 0;
+                } else {
+                    // If sortingOption is "None" or any other invalid value, reset the track cards
+                    resetTrackCards(); // PROBLEM IS HEREEEEEEE<><><><><>
+                    return 0;
+                }
+            })
+
+            $("#track-wrapper").empty();
+            console.log("sort function post-empty", $("#track-wrapper"))
+            $("#track-wrapper").append(trackCards);
+        };
+        
+        // Performs the sorting based on option selected
+        $("select[name='sorting_options']").on("change", function() {
+            var sortingOption = $(this).val();
+            sortTrackCards(sortingOption);
+        });
+
         // Shows or hides filtering containers based on selection
         $('#filter_options').change(function() {
             var selected = $(this).val()
