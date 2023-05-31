@@ -32,6 +32,7 @@ def index():
                                                cache_handler=cache_handler,
                                                show_dialog=True)
     auth_url = auth_manager.get_authorize_url()
+
     return render_template('index.html', auth_url=auth_url)
 
 @app.route('/callback')
@@ -53,9 +54,10 @@ def callback():
     # Validates access token, renews it if expired or broken, and saves it to cache
     cache_handler.save_token_to_cache(auth_manager.validate_token(access_token))
 
-    return redirect('/dashboard')
+    return redirect('/menu')
 
-@app.route('/dashboard')
+
+@app.route('/menu')
 @login_required
 def dashboard():
     cache_handler = spotipy.cache_handler.FlaskSessionCacheHandler(session)
@@ -77,7 +79,7 @@ def dashboard():
         playlists_array.extend(playlist_data.get('items'))
 
 
-    return render_template('dashboard.html', spotify=spotify, playlists_array=playlists_array)
+    return render_template('menu.html', spotify=spotify, playlists_array=playlists_array)
 
 
 @app.route('/signout')
@@ -86,9 +88,10 @@ def signout():
     session.pop("token_info", None)
     return redirect('/')
 
-@app.route('/playlist/')
+@app.route('/playlist/<playlist_id>')
+@app.route('/playlist/<playlist_id>/')
 @login_required
-def playlist():
+def playlist(playlist_id):
     cache_handler = spotipy.cache_handler.FlaskSessionCacheHandler(session)
     auth_manager = spotipy.oauth2.SpotifyOAuth(cache_handler=cache_handler)
     # Token expired, or broken, return to sign in page
@@ -101,7 +104,8 @@ def playlist():
     user_country = spotify.current_user().get('country')
 
     # Grabs playlist id from url
-    playlist_id = request.args.get('id')
+    # playlist_id = request.args.get('id')
+    playlist
 
     # Fields supplied for wanted response
     FIELDS = (  'next,'
@@ -110,7 +114,7 @@ def playlist():
                 )
     
     # Response holding playlist name and public/private status
-    playlist_details = spotify.playlist(playlist_id=playlist_id, fields=('name, public'), market=user_country, additional_types=['track'])
+    playlist_details = spotify.playlist(playlist_id=playlist_id, fields=('id, name, public'), market=user_country, additional_types=['track'])
 
     track_items_list = [] # Holds all track items from provided playlist id
 

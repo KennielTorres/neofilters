@@ -1,112 +1,28 @@
+#playlist_container {
+    background-color: lightgray;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+}
 #content_wrapper {
-    background-color: lightpink;
-    /* display: grid; */
-    /* grid-template-columns: 1fr 3fr; */
-    /* grid-template-rows: 1fr; */
-    /* grid-column-gap: 0px; */
-    /* grid-row-gap: 0px; */
+    background-color: lightsalmon;
+    display: grid;
+    grid-template-columns: 0.25fr 1fr;
+    grid-template-rows: 1fr;
+    grid-column-gap: 0px;
+    grid-row-gap: 0px;
+    height: 100%;
 }
 
 #side_container {
-    /* grid-area: 1 / 1 / 6 / 2; */
-    /* height: 100%; */
+    background-color: lightgreen;
+    grid-area: 1 / 1 / 2 / 2;
 }
 
-#track-wrapper {
-    /* grid-area: 1 / 2 / 6 / 6; */
-    /* height: 100%; */
+#track_wrapper {
+    background-color: lightblue;
+    grid-area: 1 / 2 / 2 / 3;
 }
-
-#track-card {
-    
-}
-
-#track-card-table {
-    table-layout: auto;
-    width: 90%;
-    margin: 1rem auto 1rem auto;
-    padding: 1rem 1rem 1rem 1rem;
-
-}
-
-#track-card-table td:first-child {
-    width: 15%;
-}
-
-#track-card-table td:nth-child(2) {
-    width: 15%;
-}
-
-#track-card-table td:nth-child(3) {
-    width: 35%;
-}
-
-#track-card-table td:nth-child(4) {
-    width: 45%;
-}
-
-#col1 {
-    max-width: 2rem;
-}
-
-#col2 {
-    max-width: 2rem;
-}
-
-#card-row1 {
-
-}
-
-#card-row2 {
-    margin: 0 0 0 7rem;
-}
-
-#card-row3 {
-
-}
-
-#art {
-    width: 10rem;
-    aspect-ratio: 1/1;
-}
-
-#track_name {
-
-}
-
-#artists {
-
-}
-
-#rating {
-    position: relative;
-    top: -22px;
-}
-
-#duration {
-
-}
-
-#rel_date {
-
-}
-
-#isrc {
-
-}
-
-#added_date {
-
-}
-
-#popularity {
-
-}
-
-#playlist_cont_header {
-    z-index: 2;
-}
-
 
 .artwork {
     width: 100%;
@@ -132,13 +48,9 @@
     width: 80%;
 }
 
-.menu-toggle {
-    display: none;
-}
 
-.menu-toggle:checked  {
 
-}
+
 
 /* Media Queries
 * ------------------------------------------
@@ -162,24 +74,9 @@
 }
 
 @media all and (min-width: 480px) and (max-width: 768px) {
-    .track_card {
-        flex-direction: column;
-    }
-    #side_container {
-
-    }
+    
 }
 
 @media all and (max-width: 480px) {
-    .menu-toggle {
-        display: block;
-    }
-    #side_container {
-        position: fixed;
-        top: 0;
-        left: 100%;
-        width: 100%;
-        height: 100%;
-        z-index: 2;
-    }
+    
 }

@@ -22,11 +22,11 @@
                 Private
             {% endif %}
         </h2> 
-        <input class="menu-toggle" type="checkbox">
+        <input id="menu-toggle" type="checkbox">
     </header>
 
-    <div id="content_wrapper" class="flex">
-        <div id="side_container" class="bg-medblue">
+    <div id="content_wrapper">
+        <div id="side_container">
             <div id="live_search_container">
                 <label for="#live_search_input">Search</label>
                 <input id="live_search_input" type="text" name="track_search" placeholder="Name or Artist/s" maxlength="40">
@@ -35,30 +35,9 @@
                 
             </div>
         </div>
-        <main id="track_wrapper">
-            {% for track in tracks %}
-            <div class="track_card" 
-                    data-id="{{ loop.index }}"
-                    data-explicit="{{ track.get('track').get('explicit') }}"
-                    >
-                <div class="card_block_1">
-                    {% if track.get('track').get('album').get('images')|length > 0 %}
-                        <img class="artwork" id="" src="{{ track.get('track').get('album').get('images')[0].get('url') }}">
-                    {% else %}
-                        <img class="artwork" id="" src="../static/icons/black_square.svg">
-                    {% endif %}
-                </div>
-                <div class="card_block_2">
-                    <p class="track_name"><a href="{{ track.get('track').get('external_urls').get('spotify') }}" target="_blank" rel="noopener noreferrer">{{ track.get('track').get('name') }}</a></p>
-                    <div class="artists">
-                        {% for artist in track.get('track').get('artists') %}
-                            <p id="artist-{{ loop.index }}"><a href="{{ artist.get('external_urls').get('spotify') }}" target="_blank" rel="noopener noreferrer">{{ artist.get('name') }}</a></p>
-                        {% endfor %}
-                    </div>
-                </div>
-            </div>
-            {% endfor %}
-        </main>
+        <div id="track_wrapper">
+            
+        </div>
     </div>
 
 
