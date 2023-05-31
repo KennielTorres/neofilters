@@ -2,218 +2,7 @@
 
 {% block head %}
 <link rel="stylesheet" href="../static/styles/playlist.css">
-<script>
-    jQuery(document).ready(function($){
-        var explicitTracks = $("[data-explicit='True']")
-        var cleanTracks = $("[data-explicit='False']")
-
-        // Store the original order of the track cards
-        var originalTrackOrder = [] 
-        $('#track-wrapper > #track-card').each(function() {
-            originalTrackOrder.push($(this))
-        });
-
-        // Function that resets track cards to original order
-        function restoreElementsToOriginal() {
-            console.log('element reset')
-            $("#track-wrapper").empty()
-            $("#track-wrapper").append(originalTrackOrder)
-        };
-
-        // Function to sort the track cards
-        function sortTrackCards(sortingOption) {
-            var trackCards = $("#track-wrapper").children()
-            
-            trackCards.sort(function(a, b) {
-                var trackNameA = $(a).find("#track_name").text().toUpperCase()
-                var trackNameB = $(b).find("#track_name").text().toUpperCase()
-
-                if (sortingOption == "ascending") {
-                    return (trackNameA < trackNameB) ? -1 : (trackNameA > trackNameB) ? 1 : 0;
-                } 
-                else if (sortingOption == "descending") {
-                    return (trackNameA > trackNameB) ? -1 : (trackNameA < trackNameB) ? 1 : 0;
-                } 
-            })
-
-            trackCards.sort(function(a, b) {
-                var popularityA = parseInt($(a).find("#popularity").text().substring(12))
-                var popularityB = parseInt($(b).find("#popularity").text().substring(12))
-
-                if (sortingOption == "lowest") {
-                    return popularityA - popularityB
-                } 
-                else if (sortingOption == "highest") {
-                    return popularityB - popularityA
-                }
-            })
-        
-            // If a sorting option is selected, display items sorted accordingly
-            if (sortingOption == "ascending" 
-                || sortingOption == "descending"
-                || sortingOption == "highest"
-                || sortingOption == "lowest" ){
-                $("#track-wrapper").empty()
-                $("#track-wrapper").append(trackCards)
-            }
-            // Display items are they were obtained from response (original)
-            else {
-                restoreElementsToOriginal()
-            }
-        };
-
-        // Performs the sorting based on option selected
-        $("select[name='sorting_options']").change(function() {
-            var sortingOption = $(this).val()
-            sortTrackCards(sortingOption)
-        });
-
-        // Shows or hides filtering containers based on selection
-        $('#filter_options').change(function() {
-            var selected = $(this).val()
-
-            if (selected == 'added_date' || selected == 'rel_date'){
-                $('#date_container').show()
-                $('#duration_container').hide()
-                $('#isrc_container').hide()
-                $('#popularity_container').hide()
-
-                $('optgroup[label="Numerical"]').hide()
-
-            }
-            else if (selected == 'duration'){
-                $('#duration_container').show()
-                $('#date_container').hide()
-                $('#isrc_container').hide()
-                $('#popularity_container').hide()
-
-                $('optgroup[label="Numerical"]').hide()
-
-            }
-            else if (selected == 'explicit'){
-                $('#date_container').hide()
-                $('#duration_container').hide()
-                $('#isrc_container').hide()
-                $('#popularity_container').hide()
-
-                $('optgroup[label="Numerical"]').hide()
-                
-                $('#track-wrapper > #track-card').each(function(){
-                    explicitTracks.show()
-                    cleanTracks.hide()
-                })
-            }
-            else if (selected == 'clean'){
-                $('#date_container').hide()
-                $('#duration_container').hide()
-                $('#isrc_container').hide()
-                $('#popularity_container').hide()
-
-                $('optgroup[label="Numerical"]').hide()
-                
-                $('#track-wrapper > #track-card').each(function(){
-                    cleanTracks.show()
-                    explicitTracks.hide()
-                })
-            } 
-            else if (selected == 'isrc'){
-                $('#isrc_container').show()
-                $('#date_container').hide()
-                $('#duration_container').hide()
-                $('#popularity_container').hide()
-
-                $('optgroup[label="Numerical"]').hide()
-            }
-            else if (selected == 'popularity'){
-                $('#popularity_container').show()
-                $('#date_container').hide()
-                $('#duration_container').hide()
-                $('#isrc_container').hide()
-
-                $('optgroup[label="Numerical"]').show()
-            }
-            else {
-                $('#date_container').hide()
-                $('#duration_container').hide()
-                $('#isrc_container').hide()
-                $('#popularity_container').hide()
-                $('optgroup[label="Numerical"]').hide()
-                explicitTracks.show()
-                cleanTracks.show()
-            }
-        });
-
-        // Live search functionality
-        $('#track-wrapper > #track-card').each(function(){
-            $(this).attr('data-search-terms', $(this).find('#track_name, #artists').text().trim().replace(/\s\s+/g, ' ').toLowerCase());
-            $(this).attr('data-isrc', $(this).find('#isrc').text().substring(6))
-        });
-        
-        // Name or artist search
-        $('#live-search-input').on('keyup', function(){
-            var searchTerm = $(this).val().trim().toLowerCase();
-            $('#track-wrapper > #track-card').each(function(){
-                if ($(this).filter('[data-search-terms*="' + searchTerm + '"]').length > 0 || searchTerm.length < 1) {
-                    $(this).show();
-                } 
-                else {
-                    $(this).hide();
-                }
-            });
-        });
-
-        // ISRC search
-        $('#live_isrc_input').on('keyup', function(){
-            var searchTerm = $(this).val().trim().toUpperCase();
-            $('#track-wrapper > #track-card').each(function(){
-                if ($(this).filter('[data-isrc*="' + searchTerm + '"]').length > 0 || searchTerm.length < 1) {
-                    $(this).show();
-                } 
-                else {
-                    $(this).hide();
-                }
-            });
-        });
-
-        // Popularity search lower bound
-        $('#pop_select_low').change(function() {
-            var lowValue = parseInt($(this).val())
-            $('#track-wrapper > #track-card').each(function(){
-                trackPopularity = parseInt($(this).find('#popularity').text().substring(12))
-                if (trackPopularity >= lowValue && trackPopularity <= parseInt($('#pop_select_high').val()) ){
-                    $(this).show()
-                }
-                else {
-                    $(this).hide()
-                }
-            })
-        });
-
-        // Popularity search upper bound
-        $('#pop_select_high').change(function() {
-            var highValue = parseInt($(this).val())
-            $('#track-wrapper > #track-card').each(function(){
-                trackPopularity = parseInt($(this).find('#popularity').text().substring(12))
-                if (trackPopularity <= highValue && trackPopularity >= parseInt($('#pop_select_low').val())){
-                    $(this).show()
-                }
-                else {
-                    $(this).hide()
-                }
-            })
-        });
-
-        // Reset popularity sorting input values and restore elements
-        $('#popularity_reset_btn').click(function() {
-            console.log('pop reset')
-            $("#pop_select_low").val(0);
-            $("#pop_select_high").val(100);
-            $("select[name='filter_options']").val('None')
-            restoreElementsToOriginal()
-        });
-
-    });
-</script>
+<script type="text/javascript" src="{{ url_for('static', filename='js/playlist.js') }}"></script>
 {% endblock %}
 
 {% block navclasses %} justify-space-between margin-sides-1 {% endblock%}
@@ -224,7 +13,7 @@
 
 {% block content %}
 <div id="playlist_container">
-    <header id="playlist_cont_header" class="pos-sticky top-0 bg-lightblue flex justify-space-between padding-sides-1">
+    <header id="playlist_cont_header" class="pos-sticky top-0 bg-lightblue flex padding-sides-1">
         <h1>{{ playlist_details.get('name')|default('Playlist',true) }}</h1>
         <h2> 
             {% if playlist_details.get('public') %}
@@ -233,154 +22,45 @@
                 Private
             {% endif %}
         </h2> 
+        <input class="menu-toggle" type="checkbox">
     </header>
-    <div class="margin-sides-1 flex justify-space-between">
-        <div>
-            <label for="#live-search-input">Search</label>
-            <input id="live-search-input" type="text" name="track_search" placeholder="Name or Artist/s" maxlength="40">
-        </div>
-        <div id="main_options_wrapper" class="flex">
-            <div id="filtering_container">
-                <label for="filter_options">Filter:</label>
-                <select name="filter_options" id="filter_options">
-                    <option selected value="None">None</option>
-                    <optgroup label="Range">
-                        <option value="added_date">Added Date</option>
-                        <option value="rel_date">Release Date</option>
-                        <option value="duration">Duration</option>
-                    </optgroup>
-                    <optgroup label="Rating">
-                        <option value="explicit">Explicit</option>
-                        <option value="clean">Clean</option>
-                    </optgroup>
-                    <optgroup label="Extra">
-                        <option value="isrc">ISRC</option>
-                        <option value="popularity">Popularity</option>
-                    </optgroup>
-                </select>
+
+    <div id="content_wrapper" class="flex">
+        <div id="side_container" class="bg-medblue">
+            <div id="live_search_container">
+                <label for="#live_search_input">Search</label>
+                <input id="live_search_input" type="text" name="track_search" placeholder="Name or Artist/s" maxlength="40">
             </div>
-
-            <div id="sorting_container">
-                <label for="sorting_options">Sort:</label>
-                <select name="sorting_options">
-                    <option selected value="None">None</option>
-                    <optgroup label="Alphabetical">
-                        <option value="ascending">A-Z</option>
-                        <option value="descending">Z-A</option>
-                    </optgroup>
-                    <optgroup label="Numerical" class="hide">
-                        <option value="highest">Highest First</option>
-                        <option value="lowest">Lowest First</option>
-                    </optgroup>
-                </select>
-            </div>
-        </div>
-    </div>
-
-    <div class="flex justify-end w-100 bg-medblue">
-        <div id="date_container" class="hide">
-            <label for="date_inputs">Date</label>
-            <div id="date_inputs" class="inline-flex flex-wrap">
-                <p>From:</p>
-                <input type="date" id="date_selector_lower_bound">
-                <p>To:</p>
-                <input type="date" id="date_selector_upper_bound">
-            </div>
-        </div>
-
-        <div id="duration_container" class="hide">
-            <label for="duration_inputs">Duration</label>
-            <div id="duration_inputs" class="inline-flex flex-wrap">
-                <p>From:</p>
-                <input type="number" value="0" min="0" max="59" id="duration_select_low">
-                <p>minutes</p>
-                <p>To:</p>
-                <input type="number" value="1" min="1" max="60" id="duration_select_high">
-                <p>minutes</p>
-            </div>
-        </div>
-
-        <div id="isrc_container" class="hide">
-            <label for="isrc_input">Search</label>
-            <input id="live_isrc_input" name="isrc_input" type="text" placeholder="ISRC" maxlength="12">
-        </div>
-
-        <div id="popularity_container" class="hide">
-            <label for="popularity_inputs">Popularity</label>
-            <div id="popularity_inputs" class="inline-flex flex-wrap">
-                <p>From:</p>
-                <input value="0" min="0" max="99" type="number" id="pop_select_low" onKeyDown="return false">
-                <p>To:</p>
-                <input value="100" min="1" max="100" type="number" id="pop_select_high" onKeyDown="return false">
-                <button id="popularity_reset_btn" type="button">Reset</button>
-            </div>
-        </div>
-
-    </div>
-
-    <main id="track-wrapper">
-        {% for track in tracks %}
-        <div id="track-card" 
-                data-id="{{ loop.index }}"
-                data-explicit="{{ track.get('track').get('explicit') }}"
-                >
-            <table id="track-card-table" class="bg-lightblue margin-sides-1 align-items-center">
-                <col id="col1"/>
-                <col id="col2"/>
-                <col id="col3"/>
-                <col id="col4"/>
-                <tr>
-                    <td colspan="2" rowspan="2">
-                        {% if track.get('track').get('album').get('images')|length > 0 %}
-                            <img class="picture-1" id="art" src="{{ track.get('track').get('album').get('images')[0].get('url') }}">
-                        {% else %}
-                            <img class="picture-1" id="art" src="../static/icons/black_square.svg">
-                        {% endif %}
-                    </td>
-                    <td>
-                        <h1 id="track_name"><a href="{{ track.get('track').get('external_urls').get('spotify') }}" target="_blank" rel="noopener noreferrer">{{ track.get('track').get('name') }}</a></h1>
-                    </td>
-                    <td>
-                        <div id="artists">
-                            {% for artist in track.get('track').get('artists') %}
-                                <h2 id="artist-{{ loop.index }}"><a href="{{ artist.get('external_urls').get('spotify') }}" target="_blank" rel="noopener noreferrer">{{ artist.get('name') }}</a></h2>
-                            {% endfor %}
-                        </div>
-                    </td>
-                </tr>
-    
-                <tr>
-                    <td>
-                        <p id="rel_date" title="In ISO 8601 format.">Released: {{ track.get('track').get('album').get('release_date') }}</p>
-                    </td>
-                    <td>
-                        <p id="isrc">ISRC: {{ track.get('track').get('external_ids').get('isrc') }}</p>
-                    </td>
-                </tr>
-    
-                <tr>
-                    <td>
-                        <p id="duration" class="text-center">{{ track.get('track').get('duration_ms') }}</p>
-                    </td>
-                    <td>
-                        <div id="rating" class="text-center">
-                            {% if track.get('track').get('explicit') %}
-                                <img src="../static/icons/explicit_track.svg">
-                            {% endif %}
-                        </div> 
-                    </td>
-                    <td>
-                        <p id="added_date" title="In ISO 8601 format.">Added: {{ track.get('added_at')[:10] }}</p>
-                    </td>
-                    <td>
-                        <p id="popularity">Popularity: {{ track.get('track').get('popularity') }}</p>
-                    </td>
-                </tr>
+            <div id="filtering_container" class="flex flex-col">
                 
-            </table>
+            </div>
         </div>
-        {% endfor %}
-    </main>
+        <main id="track_wrapper">
+            {% for track in tracks %}
+            <div class="track_card" 
+                    data-id="{{ loop.index }}"
+                    data-explicit="{{ track.get('track').get('explicit') }}"
+                    >
+                <div class="card_block_1">
+                    {% if track.get('track').get('album').get('images')|length > 0 %}
+                        <img class="artwork" id="" src="{{ track.get('track').get('album').get('images')[0].get('url') }}">
+                    {% else %}
+                        <img class="artwork" id="" src="../static/icons/black_square.svg">
+                    {% endif %}
+                </div>
+                <div class="card_block_2">
+                    <p class="track_name"><a href="{{ track.get('track').get('external_urls').get('spotify') }}" target="_blank" rel="noopener noreferrer">{{ track.get('track').get('name') }}</a></p>
+                    <div class="artists">
+                        {% for artist in track.get('track').get('artists') %}
+                            <p id="artist-{{ loop.index }}"><a href="{{ artist.get('external_urls').get('spotify') }}" target="_blank" rel="noopener noreferrer">{{ artist.get('name') }}</a></p>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </main>
+    </div>
+
 
 </div>
 
