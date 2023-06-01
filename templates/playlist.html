@@ -3,6 +3,15 @@
 {% block head %}
 <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles/playlist.css')}}">
 <script type="text/javascript" src="{{ url_for('static', filename='js/playlist.js') }}"></script>
+<script>
+    jQuery(document).ready(function($){
+
+        var content_container_height = $(window).height() -  $('#playlist-header').outerHeight()
+        $('#content-container').css('height', content_container_height + 'px');
+
+    });
+
+</script>
 {% endblock %}
 
 
@@ -11,12 +20,26 @@
     <header id="playlist-header" class="">
         <a id="return-arrow" href="{{ url_for('menu') }}"><img src="{{ url_for('static', filename='icons/return_arrow.svg')}}" title="Return"></a>
         <div id="header-left">
-            <p class="header-left-item">{{ playlist_details.get('name')|default('Playlist',true)|truncate(25, True) }}</p>
+            <p id="playlist-name" class="header-left-item">{{ playlist_details.get('name')|default('Playlist',true)|truncate(25, True) }}</p>
             <input class="header-left-item" id="header-input" type="text" placeholder="Name or Artists" maxlength="30">
         </div>
         <a id="sign-out-btn" class="pointer" title='Sign Out of Spotify.' onclick="window.location = window.location.origin.concat('/signout')">Sign Out</a>
     </header>
 
+    <div id="content-container">
+        <div id="filters-container">
+            <input id="filter-toggle" type="checkbox">
+            <div id="options-parent">
+                <div id="filtering_options">filter</div>
+            </div>
+        </div>
+        <div id="tracks-container">
+            test
+        </div>
+    </div>
+
+
+    
 </div>
 
 

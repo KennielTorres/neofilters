@@ -12,17 +12,22 @@
    background-color: var(--spotify-dark);
    justify-content: space-between;
    padding: 1rem 1rem 1rem 1rem;
-   color: var(--white);
+   color: var(--spotify-gray);
    width: 100%;
+}
+
+#playlist-name {
+    color: var(--white);
 }
 
 #return-arrow {
     position: relative;
     padding: 0 0.5rem 0 0;
+    
 }
 
 #return-arrow img{
-    filter: invert(100%) sepia(0%) saturate(0%) hue-rotate(322deg) brightness(104%) contrast(101%);
+    filter: invert(100%) sepia(0%) saturate(3462%) hue-rotate(39deg) brightness(71%) contrast(98%);
     position: absolute;
     top: -5px;
     transform: scale(1.2);
@@ -64,6 +69,45 @@
     transition: 100ms ease-in-out;
 }
 
+#content-container{
+    display: grid;
+    grid-template-columns: 0.25fr 1fr;
+    grid-template-rows: 0.1fr 1fr;
+    grid-column-gap: 0px;
+    grid-row-gap: 0px;
+    width: 100%;
+}
+
+#filters-container {
+    grid-area: 1 / 1 / 3 / 2;
+    background-color: lightblue;
+
+}
+
+#filter-toggle {
+    display: none;
+}
+
+#options-parent {
+    position: relative;
+    height: 100%;
+    width: 100%;
+}
+
+#filtering_options {
+    background-color: red;
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    display: block;
+}
+
+#tracks-container {
+    grid-area: 1 / 2 / 3 / 3;
+    background-color: lightcoral;
+
+}
+
 /* Classes */
 .pointer {
     cursor: pointer;
@@ -72,6 +116,14 @@
 .a-no-style {
     text-decoration: none;
     color: inherit;
+}
+
+.hide {
+    display: none;
+}
+
+.show {
+    display: block;
 }
 
 
@@ -87,7 +139,9 @@
 
 /* General */
 @media all and (min-width: 1024px) {
-    
+    #filtering_options {
+        /* display: block; */
+    }
 }
 
 @media all and (max-width: 1024px) {
@@ -104,6 +158,21 @@
     #header-input, 
     #sign-out-btn {
         margin: 0.5rem;
+    }
+    #filters-container {
+        grid-area: 1 / 1 /
+                   3 / 3;
+    }
+    #tracks-container {
+        grid-area: 2 / 1 /
+                   3 / 3;
+    }
+
+    #filter-toggle {
+        display: block;
+    }
+    #filtering_options {
+        display: none;
     }
 }
 
