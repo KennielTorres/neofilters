@@ -9,8 +9,8 @@
 {% block body %}
 <div id="body-container">
     <header id="playlist-header" class="">
+        <a id="return-arrow" href="{{ url_for('menu') }}"><img src="{{ url_for('static', filename='icons/return_arrow.svg')}}" title="Return"></a>
         <div id="header-left">
-            <a id="return-arrow" href="{{ url_for('menu') }}"><img src="{{ url_for('static', filename='icons/return_arrow.svg')}}"></a>
             <p class="header-left-item">{{ playlist_details.get('name')|default('Playlist',true)|truncate(25, True) }}</p>
             <input class="header-left-item" id="header-input" type="text" placeholder="Name or Artists" maxlength="30">
         </div>

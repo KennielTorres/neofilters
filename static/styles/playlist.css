@@ -25,6 +25,7 @@
     filter: invert(100%) sepia(0%) saturate(0%) hue-rotate(322deg) brightness(104%) contrast(101%);
     position: absolute;
     top: -5px;
+    transform: scale(1.2);
 }
 
 #return-arrow img:hover {
@@ -95,6 +96,14 @@
     }
     #header-left{
         flex-direction: column;
+    }
+    #return-arrow img {
+        left: -130px;
+        top: 35px;
+    }
+    #header-input, 
+    #sign-out-btn {
+        margin: 0.5rem;
     }
 }
 
