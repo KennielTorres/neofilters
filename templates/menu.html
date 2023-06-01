@@ -32,8 +32,7 @@
 
         // Makes table rows clickable and redirects to playlist page
         $("tr").click(function() {
-            // window.location = window.location.origin + '/playlist/' + $(this).attr('id');
-            console.log(window.location.origin + '/playlist/' + $(this).attr('id'))
+            window.location = window.location.origin + '/playlist/' + $(this).attr('id');
         });
 
     });
@@ -62,7 +61,7 @@
             <tbody id="table-body">
                 {% for playlist in playlists_array|sort(attribute='name') %}
                     <tr class="pointer" id="{{ playlist.get('id') }}">
-                        <td class="table-elements">
+                        <td class="table-elements" style="max-width: 50px;">
                             {% if playlist.get('images')[0].get('url')|length > 0 %}
                                 <img class="picture-1" id="art" width="50px" height="auto" src="{{ playlist.get('images')[0].get('url') }}">
                             {% else %}
@@ -70,7 +69,7 @@
                             {% endif %}
                         </td>
                         <td class="table-elements">
-                            {{ playlist.get('name')|default('Playlist',true) }}
+                            {{ playlist.get('name')|default('Playlist',true)|truncate(25, True) }}
                         </td>
                         <td class="table-elements">
                             {% if playlist.get('public') %}

@@ -1,45 +1,21 @@
 {% extends 'base.html' %}
 
 {% block head %}
-<link rel="stylesheet" href="../static/styles/playlist.css">
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles/playlist.css')}}">
 <script type="text/javascript" src="{{ url_for('static', filename='js/playlist.js') }}"></script>
 {% endblock %}
 
-{% block navclasses %} justify-space-between margin-sides-1 {% endblock%}
-{% block nav %}
-    <a href="{{ url_for('dashboard') }}" class="no-text-decor color-inherit">spotifilters</a>
-    {% include 'signout_btn.html' %}
-{% endblock %}
 
-{% block content %}
-<div id="playlist_container">
-    <header id="playlist_cont_header" class="pos-sticky top-0 bg-lightblue flex padding-sides-1">
-        <h1>{{ playlist_details.get('name')|default('Playlist',true) }}</h1>
-        <h2> 
-            {% if playlist_details.get('public') %}
-                Public
-            {% else %}
-                Private
-            {% endif %}
-        </h2> 
-        <input id="menu-toggle" type="checkbox">
+{% block body %}
+<div id="body-container">
+    <header id="playlist-header" class="">
+        <div id="header-left">
+            <a id="return-arrow" href="{{ url_for('menu') }}"><img src="{{ url_for('static', filename='icons/return_arrow.svg')}}"></a>
+            <p class="header-left-item">{{ playlist_details.get('name')|default('Playlist',true)|truncate(25, True) }}</p>
+            <input class="header-left-item" id="header-input" type="text" placeholder="Name or Artists" maxlength="30">
+        </div>
+        <a id="sign-out-btn" class="pointer" title='Sign Out of Spotify.' onclick="window.location = window.location.origin.concat('/signout')">Sign Out</a>
     </header>
-
-    <div id="content_wrapper">
-        <div id="side_container">
-            <div id="live_search_container">
-                <label for="#live_search_input">Search</label>
-                <input id="live_search_input" type="text" name="track_search" placeholder="Name or Artist/s" maxlength="40">
-            </div>
-            <div id="filtering_container" class="flex flex-col">
-                
-            </div>
-        </div>
-        <div id="track_wrapper">
-            
-        </div>
-    </div>
-
 
 </div>
 

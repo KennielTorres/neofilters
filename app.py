@@ -59,7 +59,7 @@ def callback():
 
 @app.route('/menu')
 @login_required
-def dashboard():
+def menu():
     cache_handler = spotipy.cache_handler.FlaskSessionCacheHandler(session)
     auth_manager = spotipy.oauth2.SpotifyOAuth(cache_handler=cache_handler)
     # Token expired, or broken, return to sign in page
@@ -103,10 +103,6 @@ def playlist(playlist_id):
     # Grabs current user's country
     user_country = spotify.current_user().get('country')
 
-    # Grabs playlist id from url
-    # playlist_id = request.args.get('id')
-    playlist
-
     # Fields supplied for wanted response
     FIELDS = (  'next,'
                 'items(added_at,'
@@ -144,6 +140,7 @@ def playlist(playlist_id):
         popularity = .get('track').get('popularity')
     """
     return render_template('playlist.html', spotify=spotify, playlist_details=playlist_details, tracks=track_items_list)
+    # return 
 
 @app.errorhandler(404)
 def invalid_route():
