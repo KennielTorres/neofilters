@@ -28,13 +28,50 @@
 
     <div id="content-container">
         <div id="filters-container">
-            <input id="filter-toggle" type="checkbox">
+            <div id="filter-header">
+                <input id="filter-toggle" type="checkbox">
+                <label id="toggle-arrow" for="filter-toggle" style="text-align: center;"><img id="toggle-arrow-img" src="{{ url_for('static', filename='icons/arrow_toggler.svg')}}"></label>
+                <p>Menu</p>
+            </div>
             <div id="options-parent">
-                <div id="filtering_options">filter</div>
+                <div id="filtering_options">
+                    <div id="option-1">
+                        <input id="explicit" type="checkbox">
+                        <label for="explicit">Explicit</label>
+                        <input id="clean" type="checkbox">
+                        <label for="clean">Clean</label>
+                    </div>
+                    <div id="option-2">
+                        <label for="search">Search</label>
+                        <input id="search" type="text" maxlength="30" placeholder="ISRC">
+                    </div>
+                    <div id="option-3">
+                        <p>Release Date</p>
+                        <div>
+                            <label >From</label>
+                            <input id="rel-lower-bound" type="date">
+                        </div>
+                        <div>
+                            <label >To</label>
+                            <input id="rel-upper-bound" type="date">
+                        </div>
+                    </div>
+                    <div id="option-4">
+                        <p>Added Date</p>
+                        <div>
+                            <label >From</label>
+                            <input id="add-lower-bound" type="date">
+                        </div>
+                        <div>
+                            <label >To</label>
+                            <input id="add-upper-bound" type="date">
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
         <div id="tracks-container">
-            test
+            tracks
         </div>
     </div>
 

@@ -1,6 +1,7 @@
 
 #playlist-header,
-#header-left {
+#header-left,
+#filter-header {
    display: flex;
    flex-direction: row;
    flex-wrap: wrap;
@@ -23,7 +24,6 @@
 #return-arrow {
     position: relative;
     padding: 0 0.5rem 0 0;
-    
 }
 
 #return-arrow img{
@@ -69,23 +69,41 @@
     transition: 100ms ease-in-out;
 }
 
-#content-container{
+#content-container {
     display: grid;
     grid-template-columns: 0.25fr 1fr;
     grid-template-rows: 0.1fr 1fr;
     grid-column-gap: 0px;
     grid-row-gap: 0px;
     width: 100%;
+    overflow: hidden;
 }
 
 #filters-container {
     grid-area: 1 / 1 / 3 / 2;
-    background-color: lightblue;
+    background-color: var(--spotify-green);
+}
 
+#filter-header {
+    align-items: center;
 }
 
 #filter-toggle {
     display: none;
+}
+
+#toggle-arrow-img {
+    width: 2rem;
+    height: auto;
+}
+
+.turn-up {
+    transform: rotate(0deg);
+    transition: 100ms ease-in-out;
+}
+.turn-down {
+    transform: rotate(90deg);
+    transition: 100ms ease-in-out;
 }
 
 #options-parent {
@@ -95,17 +113,28 @@
 }
 
 #filtering_options {
-    background-color: red;
+    background-color: var(--spotify-gray);
     position: absolute;
     height: 100%;
     width: 100%;
-    display: block;
+    display: none;
+}
+
+#option-1 {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+}
+#option-1 input {
+    display: none;
+}
+#option-1 input:checked + label {
+    color: var(--white);
 }
 
 #tracks-container {
     grid-area: 1 / 2 / 3 / 3;
-    background-color: lightcoral;
-
+    background-color: var(--white);
 }
 
 /* Classes */
@@ -121,7 +150,6 @@
 .hide {
     display: none;
 }
-
 .show {
     display: block;
 }
@@ -139,16 +167,18 @@
 
 /* General */
 @media all and (min-width: 1024px) {
-    #filtering_options {
-        /* display: block; */
+    #toggle-arrow-img:hover {
+        filter: invert(100%) sepia(100%) saturate(38%) hue-rotate(321deg) brightness(110%) contrast(110%);
+        transition: 100ms ease-in-out;
     }
+    
 }
 
 @media all and (max-width: 1024px) {
     #playlist-header {
         flex-direction: column;
     }
-    #header-left{
+    #header-left {
         flex-direction: column;
     }
     #return-arrow img {
@@ -167,13 +197,10 @@
         grid-area: 2 / 1 /
                    3 / 3;
     }
-
-    #filter-toggle {
-        display: block;
-    }
     #filtering_options {
         display: none;
     }
+
 }
 
 /* Specific */
