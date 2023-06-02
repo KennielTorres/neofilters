@@ -1,7 +1,8 @@
 
 #playlist-header,
 #header-left,
-#filter-header {
+#filter-header,
+#option-1 {
    display: flex;
    flex-direction: row;
    flex-wrap: wrap;
@@ -15,6 +16,8 @@
    padding: 1rem 1rem 1rem 1rem;
    color: var(--spotify-gray);
    width: 100%;
+   position: sticky;
+   top: 0;
 }
 
 #playlist-name {
@@ -64,6 +67,19 @@
     color: var(--white);
 }
 
+#header-input::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
+    color: var(--spotify-gray);
+    opacity: 1; /* Firefox */
+}
+  
+#header-input:-ms-input-placeholder { /* Internet Explorer 10-11 */
+    color: var(--spotify-gray);
+}
+  
+#header-input::-ms-input-placeholder { /* Microsoft Edge */
+    color: var(--spotify-gray);
+}
+
 #sign-out-btn:hover {
     color: var(--spotify-green);
     transition: 100ms ease-in-out;
@@ -86,6 +102,10 @@
 
 #filter-header {
     align-items: center;
+}
+
+#filter-header p {
+    font-size: 1.25rem;
 }
 
 #filter-toggle {
@@ -113,24 +133,72 @@
 }
 
 #filtering_options {
-    background-color: var(--spotify-gray);
+    background-color: var(--spotify-green);
     position: absolute;
     height: 100%;
     width: 100%;
     display: none;
 }
 
-#option-1 {
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
+#option-1,
+#option-2,
+#option-3,
+#option-4 {
+    padding: 1rem 0 1rem 0;
 }
+
+#option-1 label{
+    padding: 0.25rem 0.25rem 0.25rem 0.25rem;
+    border: solid 1px var(--spotify-dark);
+    border-radius: 10px;
+}
+
+#option-3 > p,
+#option-4 > p{
+    padding: 0 0 0.5rem 1rem;
+}
+
+#option-2 > label {
+    padding: 0 0 0.5rem 0;
+}
+
 #option-1 input {
     display: none;
 }
 #option-1 input:checked + label {
     color: var(--white);
+    border: solid 1px var(--white);
 }
+
+#search {
+    border: none;
+    padding: 0;
+    margin: 0;
+    background: none;
+    font-size: 1rem;
+    border-bottom: solid 1px var(--spotify-dark);
+    color: var(--spotify-dark);
+}
+
+#search:focus {
+    outline: none;
+    transition: all 100ms ease-in-out;
+    border-bottom: solid 1px var(--white);
+}
+
+#search::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
+    color: var(--spotify-dark);
+    opacity: 1; /* Firefox */
+}
+  
+#search:-ms-input-placeholder { /* Internet Explorer 10-11 */
+    color: var(--spotify-dark);
+}
+  
+#search::-ms-input-placeholder { /* Microsoft Edge */
+    color: var(--spotify-dark);
+}
+
 
 #tracks-container {
     grid-area: 1 / 2 / 3 / 3;
@@ -154,7 +222,24 @@
     display: block;
 }
 
-
+.flex {
+    display: flex;
+}
+.flex-row {
+    flex-direction: row;
+}
+.flex-col {
+    flex-direction: column;
+}
+.flex-wrap {
+    flex-wrap: wrap;
+}
+.space-evenly {
+    justify-content: space-evenly;
+}
+.align-items-c {
+    align-items: center;
+}
 /* Media Queries
 * ------------------------------------------
 *  Responsive Grid Media Queries - 1280, 1024, 768, 480
@@ -171,7 +256,10 @@
         filter: invert(100%) sepia(100%) saturate(38%) hue-rotate(321deg) brightness(110%) contrast(110%);
         transition: 100ms ease-in-out;
     }
-    
+    #option-1 label:hover{
+        transition: 100ms ease-in-out;
+        border: solid 1px var(--white);
+    }
 }
 
 @media all and (max-width: 1024px) {

@@ -17,7 +17,7 @@
 
 {% block body %}
 <div id="body-container">
-    <header id="playlist-header" class="">
+    <header id="playlist-header">
         <a id="return-arrow" href="{{ url_for('menu') }}"><img src="{{ url_for('static', filename='icons/return_arrow.svg')}}" title="Return"></a>
         <div id="header-left">
             <p id="playlist-name" class="header-left-item">{{ playlist_details.get('name')|default('Playlist',true)|truncate(25, True) }}</p>
@@ -35,34 +35,34 @@
             </div>
             <div id="options-parent">
                 <div id="filtering_options">
-                    <div id="option-1">
+                    <div id="option-1" class="flex flex-row space-evenly align-items-c">
                         <input id="explicit" type="checkbox">
                         <label for="explicit">Explicit</label>
                         <input id="clean" type="checkbox">
                         <label for="clean">Clean</label>
                     </div>
-                    <div id="option-2">
+                    <div id="option-2" class="flex flex-col align-items-c">
                         <label for="search">Search</label>
                         <input id="search" type="text" maxlength="30" placeholder="ISRC">
                     </div>
                     <div id="option-3">
                         <p>Release Date</p>
-                        <div>
+                        <div class="flex flex-col align-items-c">
                             <label >From</label>
                             <input id="rel-lower-bound" type="date">
                         </div>
-                        <div>
+                        <div class="flex flex-col align-items-c">
                             <label >To</label>
                             <input id="rel-upper-bound" type="date">
                         </div>
                     </div>
                     <div id="option-4">
                         <p>Added Date</p>
-                        <div>
+                        <div class="flex flex-col align-items-c">
                             <label >From</label>
                             <input id="add-lower-bound" type="date">
                         </div>
-                        <div>
+                        <div class="flex flex-col align-items-c">
                             <label >To</label>
                             <input id="add-upper-bound" type="date">
                         </div>
