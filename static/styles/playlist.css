@@ -211,6 +211,40 @@
 #tracks-container {
     grid-area: 1 / 2 / 3 / 3;
     background-color: var(--white);
+    overflow: auto;
+}
+
+.track-card {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+}
+
+.card-block-1,
+.card-block-2,
+.card-block-3 {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    width: 33%;
+}
+
+
+
+.c-b-1-row {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+}
+
+.artwork {
+    width: 10rem;
+    height: auto;
+    aspect-ratio: 1/1;
 }
 
 /* Classes */
@@ -292,9 +326,23 @@
     #tracks-container {
         grid-area: 2 / 1 /
                    3 / 3;
+        overflow: auto;
+    }
+    #options-parent {
+        /* height: 0; */
     }
     #filtering_options {
         display: none;
+    }
+    .track-card {
+        flex-direction: column;
+    }
+    .card-block-1 {
+        width: 100%;
+    }
+    .card-block-2,
+    .card-block-3 {
+        width: 50%;
     }
 
 }

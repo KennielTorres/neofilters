@@ -99,7 +99,40 @@
             </div>
         </div>
         <div id="tracks-container">
-            tracks
+            {% for track in tracks %}
+            <div class="track-card" 
+                    data-id="{{ loop.index }}"
+                    data-explicit="{{ track.get('track').get('explicit') }}"
+                    >
+                <div class="card-block-1">
+                    {% if track.get('track').get('album').get('images')|length > 0 %}
+                        <img class="artwork" src="{{ track.get('track').get('album').get('images')[0].get('url') }}">
+                    {% else %}
+                        <img class="artwork" src="../static/icons/black_square.svg">
+                    {% endif %}
+                    <div class="c-b-1-row">
+                        <p class="duration">{{ track.get('track').get('duration_ms') }}</p>
+                        {% if track.get('track').get('explicit') %}
+                            <img id="rating" src="../static/icons/explicit_track.svg">
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="card-block-2">
+                    <p class="track_name"><a href="{{ track.get('track').get('external_urls').get('spotify') }}" target="_blank" rel="noopener noreferrer">{{ track.get('track').get('name') }}</a></p>
+                    <p class="rel_date" title="In ISO 8601 format.">Released: {{ track.get('track').get('album').get('release_date') }}</p>
+                    <p class="added_date" title="In ISO 8601 format.">Added: {{ track.get('added_at')[:10] }}</p>
+                </div>
+                <div class="card-block-3">
+                    <div class="artists">
+                        {% for artist in track.get('track').get('artists') %}
+                            <p class="artist-{{ loop.index }}"><a href="{{ artist.get('external_urls').get('spotify') }}" target="_blank" rel="noopener noreferrer">{{ artist.get('name') }}</a></p>
+                        {% endfor %}
+                    </div>
+                    <p class="isrc">ISRC: {{ track.get('track').get('external_ids').get('isrc') }}</p>
+                    <p class="popularity">Popularity: {{ track.get('track').get('popularity') }}</p>
+                </div>
+            </div>
+            {% endfor %}
         </div>
     </div>
 
