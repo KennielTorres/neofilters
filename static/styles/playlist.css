@@ -2,7 +2,8 @@
 #playlist-header,
 #header-left,
 #filter-header,
-#option-1 {
+#option-1,
+.track-card {
    display: flex;
    flex-direction: row;
    flex-wrap: wrap;
@@ -212,12 +213,11 @@
     grid-area: 1 / 2 / 3 / 3;
     background-color: var(--white);
     overflow: auto;
+    margin: 1rem 0 1rem 0;
 }
 
 .track-card {
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
+    margin: 0.5rem 0 0.5rem 0;
 }
 
 .card-block-1,
@@ -231,8 +231,6 @@
     width: 33%;
 }
 
-
-
 .c-b-1-row {
     display: flex;
     flex-direction: row;
@@ -241,10 +239,15 @@
     align-items: center;
 }
 
+.c-b-1-row-item {
+    margin: 0 1rem 0 1rem;
+}
+
 .artwork {
     width: 10rem;
     height: auto;
     aspect-ratio: 1/1;
+    margin: 0.25rem 0 0.25rem 0;
 }
 
 /* Classes */
@@ -302,6 +305,10 @@
         transition: 100ms ease-in-out;
         border: solid 1px var(--white);
     }
+    .track-card:hover {
+        transition: 150ms ease-in-out;
+        background-color: var(--spotify-gray);
+    }
 }
 
 @media all and (max-width: 1024px) {
@@ -329,7 +336,7 @@
         overflow: auto;
     }
     #options-parent {
-        /* height: 0; */
+        display: none;
     }
     #filtering_options {
         display: none;
@@ -337,13 +344,16 @@
     .track-card {
         flex-direction: column;
     }
-    .card-block-1 {
-        width: 100%;
-    }
+    .card-block-1,
     .card-block-2,
     .card-block-3 {
-        width: 50%;
+        width: 100%;
+        text-align: center;
     }
+    /* .card-block-2, */
+    /* .card-block-3 { */
+        /* width: 50%; */
+    /* } */
 
 }
 

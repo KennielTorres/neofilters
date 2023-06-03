@@ -9,6 +9,24 @@
         var content_container_height = $(window).height() -  $('#playlist-header').outerHeight()
         $('#content-container').css('height', content_container_height + 'px');
 
+        // Live search functionality
+        $('#tracks-container > .track-card').each(function(){
+            $(this).attr('data-search-terms', $(this).find('.track_name, .artists').text().trim().replace(/\s\s+/g, ' ').toLowerCase());
+            // $(this).attr('data-isrc', $(this).find('#isrc').text().substring(6))
+        });
+        
+        // Name or artist search
+        $('#header-input').on('keyup', function(){
+            var searchTerm = $(this).val().trim().toLowerCase();
+            $('#tracks-container > .track-card').each(function(){
+                if ($(this).filter('[data-search-terms*="' + searchTerm + '"]').length > 0 || searchTerm.length < 1) {
+                    $(this).show();
+                } 
+                else {
+                    $(this).hide();
+                }
+            });
+        });
     });
 
     function structureFormAction(){
@@ -111,9 +129,9 @@
                         <img class="artwork" src="../static/icons/black_square.svg">
                     {% endif %}
                     <div class="c-b-1-row">
-                        <p class="duration">{{ track.get('track').get('duration_ms') }}</p>
+                        <p class="duration c-b-1-row-item">{{ track.get('track').get('duration_ms') }}</p>
                         {% if track.get('track').get('explicit') %}
-                            <img id="rating" src="../static/icons/explicit_track.svg">
+                            <img id="rating" src="../static/icons/explicit_track.svg" class="c-b-1-row-item">
                         {% endif %}
                     </div>
                 </div>
