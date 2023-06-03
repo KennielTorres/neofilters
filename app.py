@@ -88,8 +88,8 @@ def signout():
     session.pop("token_info", None)
     return redirect('/')
 
-@app.route('/playlist/<playlist_id>')
-@app.route('/playlist/<playlist_id>/')
+@app.route('/playlist/<playlist_id>', methods=['GET', 'POST'])
+@app.route('/playlist/<playlist_id>/', methods=['GET', 'POST'])
 @login_required
 def playlist(playlist_id):
     cache_handler = spotipy.cache_handler.FlaskSessionCacheHandler(session)
@@ -126,6 +126,30 @@ def playlist(playlist_id):
     # Process list containing all tracks to obtain the final data
     process_data(track_items_list)
 
+    # Sort data based on url argument
+    sort_by = request.args.get('sort-by')
+
+    # Sorting <<<<TO BE TESTED>>>>
+    tracks = track_items_list # Default
+    if sort_by == 'default' or sort_by == 'none':
+        tracks = track_items_list
+    elif sort_by == 'alph-asc':
+        tracks = track_items_list.sort(key=lambda x:x.get('track').get('name'))
+    elif sort_by == 'alph-desc':
+        tracks = track_items_list.sort(key=lambda x:x.get('track').get('name'), reverse=True)
+    elif sort_by == 'most-popular':
+        tracks = track_items_list.sort(key=lambda x:x.get('track').get('popularity'))
+    elif sort_by == 'least-popular':  
+        tracks = track_items_list.sort(key=lambda x:x.get('track').get('popularity'), reverse=True)
+    elif sort_by == 'rel-asc':
+        tracks = track_items_list.sort(key=lambda x:x.get('track').get('album').get('release_date'))
+    elif sort_by == 'rel-desc':
+        tracks = track_items_list.sort(key=lambda x:x.get('track').get('album').get('release_date'), reverse=True)
+    elif sort_by == 'added-asc':
+        tracks = track_items_list.sort(key=lambda x:x.get('added_at'))
+    elif sort_by == 'added-desc':
+        tracks = track_items_list.sort(key=lambda x:x.get('added_at'), reverse=True)
+
     """
         track name = track_items_array[#item_index] || item .get('track').get('name')
         track url = .get('track').get('external_urls').get('spotify')
@@ -139,7 +163,7 @@ def playlist(playlist_id):
         added to playlist (date:time) = .get('added_at')
         popularity = .get('track').get('popularity')
     """
-    return render_template('playlist.html', spotify=spotify, playlist_details=playlist_details, tracks=track_items_list)
+    return render_template('playlist.html', spotify=spotify, playlist_details=playlist_details, tracks=tracks, request=request)
     # return 
 
 @app.errorhandler(404)

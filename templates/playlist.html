@@ -11,6 +11,16 @@
 
     });
 
+    function structureFormAction(){
+        let form = document.getElementById('sort_-orm')
+        let select = document.getElementById('sort-select')
+        let selectedOption = select.options[select.selectedIndex].value
+        let currentUrl = window.location.href.split('?')[0]
+        let updatedUrl = currentUrl + '?sort-by=' + selectedOption
+        form.action = updatedUrl
+        form.submit()
+    };
+
 </script>
 {% endblock %}
 
@@ -67,7 +77,25 @@
                             <input id="add-upper-bound" type="date">
                         </div>
                     </div>
+                    <div id="sorting-options" class="flex flex-col align-items-c">
+                        <label for="sort-form" >Sort By</label>
+                        <form action="{{ request.path }}" method="post" id="sort-form">
+                            <select name="sort-select" id="sort-select" onchange="structureFormAction()">
+                                <option value="none" selected>Select</option>
+                                <option value="default">Default</option>
+                                <option value="alph-asc">A-Z</option>
+                                <option value="alph-desc">Z-A</option>
+                                <option value="most-popular">Most Popular First</option>
+                                <option value="least-popular">Least Popular First</option>
+                                <option value="rel-asc">Release Date Ascending</option>
+                                <option value="rel-desc">Release Date Descending</option>
+                                <option value="added-asc">Added Date Ascending</option>
+                                <option value="added-desc">Added Date Descending</option>
+                            </select>
+                        </form>
+                    </div>
                 </div>
+                
             </div>
         </div>
         <div id="tracks-container">
