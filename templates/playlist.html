@@ -5,6 +5,8 @@
 <script type="text/javascript" src="{{ url_for('static', filename='js/playlist.js') }}"></script>
 <script>
     jQuery(document).ready(function($){
+        var explicitTracks = $("[data-explicit='True']")
+        var cleanTracks = $("[data-explicit='False']")
 
         var content_container_height = $(window).height() -  $('#playlist-header').outerHeight()
         $('#content-container').css('height', content_container_height + 'px');
@@ -40,6 +42,27 @@
                 }
             });
         });
+
+        // Explicit and Clean hide or display
+        $('#explicit, #clean').change(function() {
+            var explicitChecked = $('#explicit').is(':checked');
+            var cleanChecked = $('#clean').is(':checked');
+
+            if (explicitChecked && cleanChecked) {
+                explicitTracks.show();
+                cleanTracks.show();
+            } else if (explicitChecked) {
+                explicitTracks.show();
+                cleanTracks.hide();
+            } else if (cleanChecked) {
+                explicitTracks.hide();
+                cleanTracks.show();
+            } else {
+                explicitTracks.show();
+                cleanTracks.show();
+            }
+        });
+
     });
 
     function structureFormAction(){
