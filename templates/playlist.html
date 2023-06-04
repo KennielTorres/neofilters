@@ -9,10 +9,10 @@
         var content_container_height = $(window).height() -  $('#playlist-header').outerHeight()
         $('#content-container').css('height', content_container_height + 'px');
 
-        // Live search functionality
+        // Name or Artist Live search functionality
         $('#tracks-container > .track-card').each(function(){
             $(this).attr('data-search-terms', $(this).find('.track_name, .artists').text().trim().replace(/\s\s+/g, ' ').toLowerCase());
-            // $(this).attr('data-isrc', $(this).find('#isrc').text().substring(6))
+            $(this).attr('data-isrc', $(this).find('.isrc').text().substring(6).toLowerCase())
         });
         
         // Name or artist search
@@ -27,10 +27,23 @@
                 }
             });
         });
+
+        // ISRC Live search functionality
+        $('#isrc-input').on('keyup', function(){
+            var isrcSearch = $(this).val().trim().toLowerCase()
+            $('#tracks-container > .track-card').each(function(){
+                if ($(this).filter('[data-isrc*="' + isrcSearch + '"]').length > 0 || isrcSearch.length < 1) {
+                    $(this).show();
+                } 
+                else {
+                    $(this).hide();
+                }
+            });
+        });
     });
 
     function structureFormAction(){
-        let form = document.getElementById('sort_-orm')
+        let form = document.getElementById('sort-form')
         let select = document.getElementById('sort-select')
         let selectedOption = select.options[select.selectedIndex].value
         let currentUrl = window.location.href.split('?')[0]
@@ -71,7 +84,7 @@
                     </div>
                     <div id="option-2" class="flex flex-col align-items-c">
                         <label for="search">Search</label>
-                        <input id="search" type="text" maxlength="30" placeholder="ISRC">
+                        <input id="isrc-input" type="text" maxlength="30" placeholder="ISRC">
                     </div>
                     <div id="option-3">
                         <p>Release Date</p>
