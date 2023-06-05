@@ -5,6 +5,7 @@ import os
 import functools
 from flask import Flask, session, request, redirect, render_template, url_for
 import spotipy
+from datetime import datetime
 from flask_session import Session
 from utils.utils import process_data
 
@@ -124,31 +125,30 @@ def playlist(playlist_id):
         track_items_list.extend(playlist_response.get('items'))
 
     # Process list containing all tracks to obtain the final data
-    process_data(track_items_list)
+    track_items_list = process_data(track_items_list)
 
     # Sort data based on url argument
     sort_by = request.args.get('sort-by')
 
-    # Sorting <<<<TO BE TESTED>>>>
-    tracks = track_items_list # Default
-    if sort_by == 'default' or sort_by == 'none':
-        tracks = track_items_list
-    elif sort_by == 'alph-asc':
-        tracks = track_items_list.sort(key=lambda x:x.get('track').get('name'))
+    # Sorting
+    if sort_by == 'alph-asc':
+        tracks = sorted(track_items_list, key=lambda x:x['track']['name'])
     elif sort_by == 'alph-desc':
-        tracks = track_items_list.sort(key=lambda x:x.get('track').get('name'), reverse=True)
+        tracks = sorted(track_items_list, key=lambda x:x['track']['name'], reverse=True)
     elif sort_by == 'most-popular':
-        tracks = track_items_list.sort(key=lambda x:x.get('track').get('popularity'))
-    elif sort_by == 'least-popular':  
-        tracks = track_items_list.sort(key=lambda x:x.get('track').get('popularity'), reverse=True)
+        tracks = sorted(track_items_list, key=lambda x:x['track']['popularity'], reverse=True)
+    elif sort_by == 'least-popular':
+        tracks = sorted(track_items_list, key=lambda x:x['track']['popularity'])
     elif sort_by == 'rel-asc':
-        tracks = track_items_list.sort(key=lambda x:x.get('track').get('album').get('release_date'))
+        tracks = sorted(track_items_list, key=lambda x: datetime.strptime(x['track']['album']['release_date'], '%Y-%m-%d'))
     elif sort_by == 'rel-desc':
-        tracks = track_items_list.sort(key=lambda x:x.get('track').get('album').get('release_date'), reverse=True)
+        tracks = sorted(track_items_list, key=lambda x: datetime.strptime(x['track']['album']['release_date'], '%Y-%m-%d'), reverse=True)
     elif sort_by == 'added-asc':
-        tracks = track_items_list.sort(key=lambda x:x.get('added_at'))
+        tracks = sorted(track_items_list, key=lambda x: datetime.strptime(x['added_at'], '%Y-%m-%d'))
     elif sort_by == 'added-desc':
-        tracks = track_items_list.sort(key=lambda x:x.get('added_at'), reverse=True)
+        tracks = sorted(track_items_list, key=lambda x: datetime.strptime(x['added_at'], '%Y-%m-%d'), reverse=True)
+    else:
+        tracks = track_items_list
 
     """
         track name = track_items_array[#item_index] || item .get('track').get('name')
@@ -186,13 +186,19 @@ def testing():
                     'track(album(album_type, images, release_date), artists(external_urls.spotify, name), duration_ms, explicit, external_ids.isrc, external_urls.spotify, id, name, popularity))'
                 )
     
-    test_id = '7yjDN2E86axLlQNi8NsGux' # dynamic value in full code
+    test_id = '3x17Px8ImK43i0cdnFUyfl' # dynamic value in full code
     result = spotify.playlist_items(playlist_id=test_id, fields=FIELDS, market='US', additional_types=['track'])
 
-    item = result.get('items')[1]
+    item = result.get('items')
 
-    return render_template('testing.html', item=item)
-
+    # return render_template('testing.html', item=item)
+    # return result.get('items').sort(key=lambda x: x['track']['name'])
+    # process_data(result.get('items'))
+    result = process_data(result.get('items'))
+    sortedData = sorted(result, key=lambda x: datetime.strptime(x['track']['album']['release_date'], '%Y-%m-%d'))
+    return sortedData
+    # return result
+    
 
 if __name__ == "__main__":
     app.run(debug=True, port=8000)
