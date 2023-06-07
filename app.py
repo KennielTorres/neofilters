@@ -135,6 +135,10 @@ def playlist(playlist_id):
         tracks = sorted(track_items_list, key=lambda x:x['track']['name'])
     elif sort_by == 'alph-desc':
         tracks = sorted(track_items_list, key=lambda x:x['track']['name'], reverse=True)
+    elif sort_by == 'dur-asc':
+        tracks = sorted(track_items_list, key=lambda x:x['track']['duration_ms'])
+    elif sort_by == 'dur-desc':
+        tracks = sorted(track_items_list, key=lambda x:x['track']['duration_ms'], reverse=True)
     elif sort_by == 'most-popular':
         tracks = sorted(track_items_list, key=lambda x:x['track']['popularity'], reverse=True)
     elif sort_by == 'least-popular':
