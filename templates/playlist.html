@@ -86,37 +86,59 @@
 
         // Release Date Filtering
         $('#release-submit').click(function(){
-            var rel_date_lower = new Date($('#rel-lower-bound').val()).withoutTime()
-            var rel_date_upper = new Date($('#rel-upper-bound').val()).withoutTime()
+            // Validate date inputs, if empty add class
+            if ($('#rel-lower-bound').val() === '' || $('#rel-upper-bound').val() === ''){
+                $('#rel-lower-bound').addClass('invalid-input')
+                $('#rel-upper-bound').addClass('invalid-input')
+            }
+            else {
+                $('#rel-lower-bound').removeClass('invalid-input')
+                $('#rel-upper-bound').removeClass('invalid-input')
+                var rel_date_lower = new Date($('#rel-lower-bound').val()).withoutTime()
+                var rel_date_upper = new Date($('#rel-upper-bound').val()).withoutTime()
 
-            $('#tracks-container > .track-card').each(function(){
-                var card_date = new Date($(this).find('.rel_date').text().substring(10)).withoutTime()
-                if (card_date >= rel_date_lower && card_date <= rel_date_upper){
-                    $(this).show()
-                }
-                else {
-                    $(this).hide()
-                }
-            })
-        
+                $('#tracks-container > .track-card').each(function(){
+                    var card_date = new Date($(this).find('.rel_date').text().substring(10)).withoutTime()
+                    if (card_date >= rel_date_lower && card_date <= rel_date_upper){
+                        $(this).show()
+                    }
+                    else {
+                        $(this).hide()
+                    }
+                })
+
+            }
         });
         
         // Added Date Filtering
         $('#added-submit').click(function() {
-            var add_date_lower = new Date($('#add-lower-bound').val()).withoutTime()
-            var add_date_upper = new Date($('#add-upper-bound').val()).withoutTime()
+            // Validate date inputs, if empty add class
+            if ($('#add-lower-bound').val() === '' || $('#add-upper-bound').val() === ''){
+                $('#add-lower-bound').addClass('invalid-input')
+                $('#add-upper-bound').addClass('invalid-input')
+            }
+            else {
+                $('#add-lower-bound').removeClass('invalid-input')
+                $('#add-upper-bound').removeClass('invalid-input')
+                var add_date_lower = new Date($('#add-lower-bound').val()).withoutTime()
+                var add_date_upper = new Date($('#add-upper-bound').val()).withoutTime()
 
-            $('#tracks-container > .track-card').each(function(){
-                var card_date = new Date($(this).find('.rel_date').text().substring(10)).withoutTime()
-                if (card_date >= add_date_lower && card_date <= add_date_upper){
-                    $(this).show()
-                }
-                else {
-                    $(this).hide()
-                }
-            })
+                $('#tracks-container > .track-card').each(function(){
+                    var card_date = new Date($(this).find('.rel_date').text().substring(10)).withoutTime()
+                    if (card_date >= add_date_lower && card_date <= add_date_upper){
+                        $(this).show()
+                    }
+                    else {
+                        $(this).hide()
+                    }
+                })
+            }
         });
 
+        // Restore page to default and reset all inputs, filters, and sorting.
+        $('#reset-all').click(function () {
+            defaultPlaylistView()
+        });
     });
 
     // Structure form url to include selected value
@@ -129,6 +151,13 @@
         form.action = updatedUrl
         form.submit()
     };
+
+    function defaultPlaylistView(){
+        let form = document.getElementById('sort-form')
+        let playlistUrl = window.location.href.split('?')[0]
+        form.action = playlistUrl
+        form.submit()
+    }
 
 </script>
 {% endblock %}
@@ -150,29 +179,32 @@
             <div id="filter-header">
                 <input id="filter-toggle" type="checkbox">
                 <label id="toggle-arrow" for="filter-toggle" style="text-align: center;"><img id="toggle-arrow-img" src="{{ url_for('static', filename='icons/arrow_toggler.svg')}}"></label>
-                <p>Menu</p>
+                <div id="filtering-subheader">
+                    <p>Menu</p>
+                    <button id="reset-all">Clear</button>
+                </div>
             </div>
             <div id="options-parent">
                 <div id="filtering_options">
+                    <div id="option-2" class="flex flex-col align-items-c">
+                        <label for="search">Search</label>
+                        <input id="isrc-input" type="text" maxlength="30" placeholder="ISRC">
+                    </div>
                     <div id="option-1" class="flex flex-row space-evenly align-items-c">
                         <input id="explicit" type="checkbox">
                         <label for="explicit">Explicit</label>
                         <input id="clean" type="checkbox">
                         <label for="clean">Clean</label>
                     </div>
-                    <div id="option-2" class="flex flex-col align-items-c">
-                        <label for="search">Search</label>
-                        <input id="isrc-input" type="text" maxlength="30" placeholder="ISRC">
-                    </div>
                     <div id="option-3">
                         <p>Release Date</p>
                         <div class="flex flex-col align-items-c">
                             <label >From</label>
-                            <input id="rel-lower-bound" type="date">
+                            <input id="rel-lower-bound" type="date" class="">
                         </div>
                         <div class="flex flex-col align-items-c">
                             <label >To</label>
-                            <input id="rel-upper-bound" type="date">
+                            <input id="rel-upper-bound" type="date" class="">
                         </div>
                         <div class="flex flex-col align-items-c">
                             <input class="submit-btn" type="submit" id="release-submit">
@@ -182,11 +214,11 @@
                         <p>Added Date</p>
                         <div class="flex flex-col align-items-c">
                             <label >From</label>
-                            <input id="add-lower-bound" type="date">
+                            <input id="add-lower-bound" type="date" class="">
                         </div>
                         <div class="flex flex-col align-items-c">
                             <label >To</label>
-                            <input id="add-upper-bound" type="date">
+                            <input id="add-upper-bound" type="date" class="">
                         </div>
                         <div class="flex flex-col align-items-c">
                             <input class="submit-btn" type="submit" id="added-submit">
