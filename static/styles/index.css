@@ -16,6 +16,8 @@
     justify-content: space-between;
     padding: 1.25rem 1rem 1.25rem 1rem;
     background-color: var(--spotify-green);
+    position: sticky;
+    top: 0;
 }
 
 .nav-end-item {
@@ -29,7 +31,7 @@
     justify-content: center;
     align-items: center;
     text-align: center;
-    padding: 3rem 1rem 0 1rem;
+    padding: 3rem 1rem 5rem 1rem;
 }
 
 #information_container > div {
@@ -44,6 +46,10 @@
     padding: 1rem 0 1rem 0;
     background-color: var(--spotify-gray);
     font-size: 0.75rem;
+}
+
+#information_container em {
+    font-weight: 900;
 }
 
 /* Classes */
