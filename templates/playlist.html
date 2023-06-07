@@ -8,8 +8,22 @@
         var explicitTracks = $("[data-explicit='True']")
         var cleanTracks = $("[data-explicit='False']")
 
-        var content_container_height = $(window).height() -  $('#playlist-header').outerHeight()
-        $('#content-container').css('height', content_container_height + 'px');
+        var resizeDelay = 200;
+        var doResize = true;
+        var resizer = function () {
+            if (doResize) {
+                var content_container_height = $(window).height() -  $('#playlist-header').outerHeight()
+                $('#content-container').css('height', content_container_height + 'px');
+                doResize = false;
+            }
+        };
+        var resizerInterval = setInterval(resizer, resizeDelay);
+        resizer();
+        
+        $(window).resize(function() {
+            doResize = true;
+        });
+
 
         // Name or Artist Live search functionality
         $('#tracks-container > .track-card').each(function(){
@@ -63,8 +77,49 @@
             }
         });
 
+        // Deserializing dates to remove time
+        Date.prototype.withoutTime = function () {
+            var d = new Date(this);
+            d.setHours(0, 0, 0, 0);
+            return d;
+        }
+
+        // Release Date Filtering
+        $('#release-submit').click(function(){
+            var rel_date_lower = new Date($('#rel-lower-bound').val()).withoutTime()
+            var rel_date_upper = new Date($('#rel-upper-bound').val()).withoutTime()
+
+            $('#tracks-container > .track-card').each(function(){
+                var card_date = new Date($(this).find('.rel_date').text().substring(10)).withoutTime()
+                if (card_date >= rel_date_lower && card_date <= rel_date_upper){
+                    $(this).show()
+                }
+                else {
+                    $(this).hide()
+                }
+            })
+        
+        });
+        
+        // Added Date Filtering
+        $('#added-submit').click(function() {
+            var add_date_lower = new Date($('#add-lower-bound').val()).withoutTime()
+            var add_date_upper = new Date($('#add-upper-bound').val()).withoutTime()
+
+            $('#tracks-container > .track-card').each(function(){
+                var card_date = new Date($(this).find('.rel_date').text().substring(10)).withoutTime()
+                if (card_date >= add_date_lower && card_date <= add_date_upper){
+                    $(this).show()
+                }
+                else {
+                    $(this).hide()
+                }
+            })
+        });
+
     });
 
+    // Structure form url to include selected value
     function structureFormAction(){
         let form = document.getElementById('sort-form')
         let select = document.getElementById('sort-select')
@@ -119,6 +174,9 @@
                             <label >To</label>
                             <input id="rel-upper-bound" type="date">
                         </div>
+                        <div class="flex flex-col align-items-c">
+                            <input class="submit-btn" type="submit" id="release-submit">
+                        </div>
                     </div>
                     <div id="option-4">
                         <p>Added Date</p>
@@ -129,6 +187,9 @@
                         <div class="flex flex-col align-items-c">
                             <label >To</label>
                             <input id="add-upper-bound" type="date">
+                        </div>
+                        <div class="flex flex-col align-items-c">
+                            <input class="submit-btn" type="submit" id="added-submit">
                         </div>
                     </div>
                     <div id="sorting-options" class="flex flex-col align-items-c">
