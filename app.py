@@ -161,5 +161,5 @@ def invalid_route():
     return '404 Page not found'
 
 
-if __name__ == "__main__":
-    app.run(debug=False, port=8000)
+# if __name__ == "__main__":
+    # app.run(debug=False, port=8000)
