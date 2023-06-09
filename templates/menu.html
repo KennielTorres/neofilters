@@ -63,12 +63,12 @@
                     <tr class="pointer" id="{{ playlist.get('id') }}">
                         <td class="table-elements" style="max-width: 50px;">
                             {% if playlist.get('images')[0].get('url')|length > 0 %}
-                                <img class="picture-1" id="art" width="50px" height="auto" src="{{ playlist.get('images')[0].get('url') }}">
+                                <img class="picture-1" id="art" src="{{ playlist.get('images')[0].get('url') }}">
                             {% else %}
-                                <img class="picture-1" id="art" width="50px" height="auto" src="../static/icons/black_square.svg">
+                                <img class="picture-1" id="art" src="../static/icons/black_square.svg">
                             {% endif %}
                         </td>
-                        <td class="table-elements">
+                        <td class="table-elements" id="playlist-name">
                             {{ playlist.get('name')|default('Playlist',true)|truncate(25, True) }}
                         </td>
                         <td class="table-elements">
