@@ -1,29 +1,54 @@
-{% block styling %}
-    <link rel="stylesheet" href="../static/styles/index.css">
+{% extends 'base.html' %}
+
+{% block head %}
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles/index.css')}}">
 {% endblock %}
 
 
-{% extends 'base.html' %}
 
-{% block content %}
-    <div class="flex flex-column align-center h-100" id="index_container">
-        <div class="flex flex-column justify-center align-center">
-            <h3 class="text-center">Please login below using your Spotify credentials.</h3>
-            <button type='button' title='Sign In to your Spotify account.'>Sign In</button>
+
+{% block body %}
+<div id="body-wrapper">
+    <nav id="nav-container">
+        <a class="nav-child a-no-style">spotifilters</a>
+        <div class="nav-child" id="nav-end">
+            <a class="nav-item nav-end-item pointer" onclick="window.location.href='{{ auth_url }}'" title="Continue with Spotify">Sign In</a>
         </div>
+    </nav>
+
+    <div id="information_container">
+        <h3>Why spotifilters?</h3>
         <div>
-            </div><h3>Why <i>spotifilters</i>?</h3>
             <p>
                 As known, Spotify offers a handful of options to filter and curate your playlists 
                 to your likings. However, at times it feels like there aren't enough
                 options. Here at spotifilters, we are able to offer you the traditional and even more advanced
                 filtering options such as filtering by the release date, or even a range of dates, 
-                genres, and artists, amongst many more.
+                and popularity, amongst others.
             </p>
             <p>
                 We want to give you the most control over your music, because we believe that 
                 nobody knows you better than yourself. We hope you enjoy this platform! 
             </p>
-        <div/>
-    </div>  
+        </div>
+        <div>
+            <h3>Disclaimer</h3>
+            <p>
+                The information provided by spotifilters is for educational purposes only. All information 
+                on the site is provided in good faith, however we make no representation or warranty of any kind,
+                expressed or implied, regarding accuracy, adequacy, validity, reliability, availability, or
+                completeness of any information on the site. Some information has been given a default, or
+                placeholder, value to ensure the site's functionality. <em>Your use of the site and your reliance
+                on any information on the site is solely at your own risk.</em> 
+            </p>
+        </div>
+    </div>
+
+    <div id="footer_container">
+        <p class="footer-item">Developed by: <a class="pointer a-no-style" href="https://www.linkedin.com/in/kennieltorres/">Kenniel Torres</a></p>
+        <a class="footer-item pointer a-no-style" href="https://developer.spotify.com/">Spotify Web API</a>
+        <a class="footer-item pointer a-no-style" href="https://spotipy.readthedocs.io/">Spotipy Library</a>
+    </div>
+
+</div>
 {% endblock %}

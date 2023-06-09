@@ -1,0 +1,92 @@
+{% extends 'base.html' %}
+
+{% block head %}
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles/menu.css')}}">
+<script type="text/javascript" src="{{ url_for('static', filename='js/menu.js') }}"></script>
+<script type="text/javascript">
+    jQuery(document).ready(function($){
+        // Live search functionality
+        $('#table-body tr').each(function(){
+            $(this).attr('data-search-term', $(this).text().trim().replace(/\s\s+/g, ' ').toLowerCase());
+        });
+
+        $('#nav-input').on('keyup', function(){
+            var searchTerm = $(this).val().trim().toLowerCase();
+            $('#table-body tr').each(function(){
+                if ($(this).filter('[data-search-term*="' + searchTerm + '"]').length > 0 || searchTerm.length < 1) {
+                    $(this).show();
+                } 
+                else {
+                    $(this).hide();
+                }
+            });
+        });
+
+        $('#nav-input').on('focus', function() {
+            $('#footer_container').hide()
+        });
+
+        $('#nav-input').on('blur', function() {
+            $('#footer_container').show()
+        });
+
+        // Makes table rows clickable and redirects to playlist page
+        $("tr").click(function() {
+            window.location = window.location.origin + '/playlist/' + $(this).attr('id');
+        });
+
+    });
+
+
+</script>
+{% endblock %}
+
+
+
+{% block body %}
+<div id="body-wrapper">
+    <nav id="nav-container">
+        <input id="nav-input" type="text" placeholder="Name or Status" maxlength="30">
+        <a class="pointer" title='Sign Out of Spotify.' onclick="window.location = window.location.origin.concat('/signout')">Sign Out</a>
+    </nav>
+    <div id="playlist-container">
+        <table id="playlist-table">
+            <thead>
+                <tr>
+                    <th class="table-headers">Art</th>
+                    <th class="table-headers">Name</th>
+                    <th class="table-headers">Status</th>
+                </tr>
+            </thead>
+            <tbody id="table-body">
+                {% for playlist in playlists_array|sort(attribute='name') %}
+                    <tr class="pointer" id="{{ playlist.get('id') }}">
+                        <td class="table-elements" style="max-width: 50px;">
+                            {% if playlist.get('images')[0].get('url')|length > 0 %}
+                                <img class="picture-1" id="art" src="{{ playlist.get('images')[0].get('url') }}">
+                            {% else %}
+                                <img class="picture-1" id="art" src="../static/icons/black_square.svg">
+                            {% endif %}
+                        </td>
+                        <td class="table-elements" id="playlist-name">
+                            {{ playlist.get('name')|default('Playlist',true)|truncate(25, True) }}
+                        </td>
+                        <td class="table-elements">
+                            {% if playlist.get('public') %}
+                                Public
+                            {% else %}
+                                Private
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <div id="footer_container">
+        <p class="footer-item">Developed by: <a class="pointer a-no-style" href="https://www.linkedin.com/in/kennieltorres/">Kenniel Torres</a></p>
+        <a class="footer-item pointer a-no-style" href="https://developer.spotify.com/">Spotify Web API</a>
+        <a class="footer-item pointer a-no-style" href="https://spotipy.readthedocs.io/">Spotipy Library</a>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,85 @@
+#track_card {
+    background-color: var(--dark-blue);
+}
+
+#track-card-table {
+    table-layout: auto;
+    width: 90%;
+    margin: auto;
+    padding: 1rem 1rem 1rem 1rem;
+
+}
+
+#track-card-table td:first-child {
+    width: 15%;
+}
+
+#track-card-table td:nth-child(2) {
+    width: 15%;
+}
+
+#track-card-table td:nth-child(3) {
+    width: 35%;
+}
+
+#track-card-table td:nth-child(4) {
+    width: 45%;
+}
+
+#col1 {
+    max-width: 2rem;
+}
+
+#col2 {
+    max-width: 2rem;
+}
+
+#card-row1 {
+
+}
+
+#card-row2 {
+    margin: 0 0 0 7rem;
+}
+
+#card-row3 {
+
+}
+
+#art {
+    width: 10rem;
+    aspect-ratio: 1/1;
+}
+
+#track_name {
+
+}
+
+#artists {
+
+}
+
+#rating {
+    position: relative;
+    top: -22px;
+}
+
+#duration {
+
+}
+
+#rel_date {
+
+}
+
+#isrc {
+
+}
+
+#added_date {
+
+}
+
+#added_by {
+
+}

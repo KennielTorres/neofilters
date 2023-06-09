@@ -1,0 +1,457 @@
+
+#playlist-header,
+#header-left,
+#filter-header,
+#option-1,
+.track-card,
+#filtering-subheader {
+   display: flex;
+   flex-direction: row;
+   flex-wrap: wrap;
+}
+
+
+#playlist-header {
+   align-items: center;
+   background-color: var(--spotify-dark);
+   justify-content: space-between;
+   padding: 1rem 1rem 1rem 1rem;
+   color: var(--spotify-gray);
+   width: 100%;
+   position: sticky;
+   top: 0;
+}
+
+#playlist-name {
+    color: var(--white);
+}
+
+#return-arrow {
+    position: relative;
+    padding: 0 0.5rem 0 0;
+}
+
+#return-arrow img{
+    filter: invert(100%) sepia(0%) saturate(3462%) hue-rotate(39deg) brightness(71%) contrast(98%);
+    position: absolute;
+    top: -5px;
+    transform: scale(1.2);
+}
+
+#return-arrow img:hover {
+    filter: invert(56%) sepia(59%) saturate(1613%) hue-rotate(96deg) brightness(94%) contrast(77%);
+    transition: filter 100ms ease-in-out;
+}
+
+#header-left {
+    align-items: center;
+    justify-content: space-evenly;
+}
+
+.header-left-item {
+    padding: 0 1rem 0 1rem;
+}
+
+#header-input {
+    border: none;
+    padding: 0;
+    margin: 0;
+    border-bottom: solid 1px var(--spotify-gray);
+    background: none;
+    width: 10rem;
+    font-size: 1rem;
+}
+
+#header-input:focus {
+    outline: none;
+    transition: all 100ms ease-in-out;
+    border-bottom: solid 1px var(--spotify-green);
+    color: var(--white);
+}
+
+#header-input::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
+    color: var(--spotify-gray);
+    opacity: 1; /* Firefox */
+}
+  
+#header-input:-ms-input-placeholder { /* Internet Explorer 10-11 */
+    color: var(--spotify-gray);
+}
+  
+#header-input::-ms-input-placeholder { /* Microsoft Edge */
+    color: var(--spotify-gray);
+}
+
+#sign-out-btn:hover {
+    color: var(--spotify-green);
+    transition: 100ms ease-in-out;
+}
+
+#content-container {
+    display: grid;
+    grid-template-columns: 0.25fr 1fr;
+    grid-template-rows: 0.1fr 1fr;
+    grid-column-gap: 0px;
+    grid-row-gap: 0px;
+    width: 100%;
+    overflow: hidden;
+}
+
+#filters-container {
+    grid-area: 1 / 1 / 3 / 2;
+    background-color: var(--spotify-green);
+}
+
+#filter-header {
+    align-items: center;
+}
+
+#filter-header p {
+    font-size: 1.25rem;
+}
+
+#filter-toggle {
+    display: none;
+}
+
+#toggle-arrow-img {
+    width: 2rem;
+    height: auto;
+    display: none;
+}
+
+#filtering-subheader p{
+    margin: 0 0 0 1rem;
+}
+
+.turn-up {
+    transform: rotate(0deg);
+    transition: 100ms ease-in-out;
+}
+.turn-down {
+    transform: rotate(90deg);
+    transition: 100ms ease-in-out;
+}
+
+#filtering-subheader {
+    justify-content: space-between;
+    width: 80%;
+}
+
+#reset-all {
+    border: none;
+    outline: none;
+    background-color: transparent;
+    font-size: inherit;
+    padding: 0.25rem 0.25rem 0.25rem 0.25rem;
+    align-self: center;
+}
+
+#options-parent {
+    position: relative;
+    height: 100%;
+    width: 100%;
+    display: block;
+}
+
+#filtering_options {
+    background-color: var(--spotify-green);
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    display: block;
+}
+
+#option-1,
+#option-2,
+#option-3,
+#option-4 {
+    padding: 0.5rem 0 0.5rem 0;
+}
+
+#option-1 label{
+    padding: 0.25rem 0.25rem 0.25rem 0.25rem;
+    border: solid 1px var(--spotify-dark);
+    border-radius: 10px;
+}
+
+#option-3 > p,
+#option-4 > p{
+    padding: 0 0 0.5rem 1rem;
+}
+
+#option-2 > label {
+    padding: 0 0 0.5rem 0;
+}
+
+#isrc-input {
+    border: none;
+    padding: 0;
+    margin: 0;
+    border-bottom: solid 1px var(--spotify-dark);
+    background: none;
+    width: 10rem;
+    font-size: 1rem;
+}
+
+#isrc-input:focus {
+    outline: none;
+    transition: all 100ms ease-in-out;
+    border-bottom: solid 1px var(--white);
+    color: var(--white);
+}
+
+#isrc-input::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
+    color: var(--spotify-dark);
+    opacity: 1; /* Firefox */
+}
+  
+#isrc-input:-ms-input-placeholder { /* Internet Explorer 10-11 */
+    color: var(--spotify-dark);
+}
+  
+#isrc-input::-ms-input-placeholder { /* Microsoft Edge */
+    color: var(--spotify-dark);
+}
+
+#option-1 input {
+    display: none;
+}
+#option-1 input:checked + label {
+    color: var(--white);
+    border: solid 1px var(--white);
+}
+
+.submit-btn {
+    margin: 0.5rem 0 0 0;
+}
+
+input[type="submit"] {
+    outline: none;
+    background-color: transparent;
+    border: none;
+    padding: 0.1rem 0.1rem 0.1rem 0.1rem;
+    font-size: medium;
+}
+
+input[type="submit"]:hover {
+    color: var(--white);
+    transition: 100ms ease-in;
+}
+
+.invalid-input {
+    border: 3px solid #d0342c;
+}
+
+#sorting-options {
+    justify-content: center;
+    margin: 1rem 0 0 0;
+}
+
+#sort-select {
+    margin: 0.5rem 0 0 0;
+    max-width: 7rem;
+}
+
+#tracks-container {
+    grid-area: 1 / 2 / 3 / 3;
+    background-color: var(--white);
+    overflow: auto;
+    margin: 1rem 0 1rem 0;
+}
+#tracks-container a {
+    text-decoration: none;
+    color: inherit;
+}
+
+
+.track-card {
+    margin: 0.5rem 0 0.5rem 0;
+}
+
+.card-block-1,
+.card-block-2,
+.card-block-3 {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    width: 33%;
+}
+
+.c-b-1-row {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+}
+
+.c-b-1-row-item {
+    margin: 0 1rem 0 1rem;
+}
+
+.artwork {
+    width: 10rem;
+    height: auto;
+    aspect-ratio: 1/1;
+    margin: 0.25rem 0 0.25rem 0;
+}
+
+.track_name {
+    font-size: x-large;
+    margin: 0 0 1rem 0;
+    border-bottom: dashed 2px var(--spotify-gray);
+    text-align: center;
+}
+.track_name a,
+.artists p a {
+    font-family: 'Playfair Display', serif;
+}
+
+.artists {
+    font-size: large;
+    text-align: center;
+}
+
+.sm-margin {
+    margin: 0 0 0.25rem 0;
+}
+
+.pointer {
+    cursor: pointer;
+}
+
+.a-no-style {
+    text-decoration: none;
+    color: inherit;
+}
+
+.hide {
+    display: none;
+}
+.show {
+    display: block;
+}
+
+.flex {
+    display: flex;
+}
+.flex-row {
+    flex-direction: row;
+}
+.flex-col {
+    flex-direction: column;
+}
+.flex-wrap {
+    flex-wrap: wrap;
+}
+.space-evenly {
+    justify-content: space-evenly;
+}
+.align-items-c {
+    align-items: center;
+}
+/* Media Queries
+* ------------------------------------------
+*  Responsive Grid Media Queries - 1280, 1024, 768, 480
+*   1280-1024   - desktop (default grid)
+*   1024-768    - tablet landscape
+*   768-480     - tablet 
+*   480-less    - phone landscape & smaller
+* --------------------------------------------
+*/
+
+/* General */
+@media all and (min-width: 1024px) {
+    #toggle-arrow-img:hover {
+        filter: invert(100%) sepia(100%) saturate(38%) hue-rotate(321deg) brightness(110%) contrast(110%);
+        transition: 100ms ease-in-out;
+    }
+    #option-1 label:hover{
+        transition: 100ms ease-in-out;
+        border: solid 1px var(--white);
+    }
+    #tracks-container a:hover {
+        color: var(--spotify-green);
+        transition: 100ms ease-in;
+    }
+    #reset-all:hover {
+        color: var(--white);
+        transition: all 200ms ease-in-out;
+    }
+}
+
+@media all and (max-width: 1024px) {
+    #playlist-header {
+        flex-direction: column;
+    }
+    #header-left {
+        flex-direction: column;
+    }
+    #return-arrow img {
+        left: -130px;
+        top: 35px;
+    }
+    #header-input, 
+    #sign-out-btn {
+        margin: 0.5rem;
+    }
+    #filters-container {
+        grid-area: 1 / 1 /
+                   3 / 3;
+        overflow: auto;
+    }
+    #tracks-container {
+        grid-area: 2 / 1 /
+                   3 / 3;
+        overflow: auto;
+        height: 100%;
+        padding: 0 0 4rem 0;
+    }
+    #toggle-arrow-img {
+        display: block;
+    }
+    #options-parent {
+        display: none;
+    }
+    #filtering_options {
+        display: none;
+        padding: 0 0 2rem 0;
+    }
+    .track-card {
+        flex-direction: column;
+    }
+    .card-block-1,
+    .card-block-2,
+    .card-block-3 {
+        width: 100%;
+        text-align: center;
+    }
+    .card-block-3 {
+        border-bottom: 1px solid var(--spotify-dark);
+    }
+
+}
+
+/* Specific */
+@media all and (min-width: 1280px) {
+
+}
+
+@media all and (min-width: 1024px) and (max-width: 1280px) {
+
+}
+
+@media all and (min-width: 768px) and (max-width: 1024px) {
+
+}
+
+@media all and (min-width: 480px) and (max-width: 768px) {
+    
+}
+
+@media all and (max-width: 480px) {
+    
+}

@@ -1,13 +1,69 @@
 
+#nav-container,
+#nav-end,
+#footer_container {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+}
 
-/* Class styling */
-.flex-column {
+#nav-container,
+#nav-end {
+    align-items: center;
+}
+
+#nav-container {
+    justify-content: space-between;
+    padding: 1.25rem 1rem 1.25rem 1rem;
+    background-color: var(--spotify-green);
+    position: sticky;
+    top: 0;
+}
+
+.nav-end-item {
+    margin: 0 1rem 0 1rem;
+}
+
+#information_container {
+    display: flex;
     flex-direction: column;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 3rem 1rem 5rem 1rem;
 }
 
-.text-center {
-    text-align: center;
+#information_container > div {
+    padding: 1rem 0 0 0;
 }
+
+#footer_container {
+    justify-content: space-evenly;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    padding: 1rem 0 1rem 0;
+    background-color: var(--spotify-gray);
+    font-size: 0.75rem;
+}
+
+#information_container em {
+    font-weight: 900;
+}
+
+/* Classes */
+
+.pointer {
+    cursor: pointer;
+}
+
+.a-no-style {
+    text-decoration: none;
+    color: inherit;
+}
+
+
 
 /* Media Queries
 * ------------------------------------------
@@ -18,33 +74,40 @@
 *   480-less    - phone landscape & smaller
 * --------------------------------------------
 */
+
+/* General */
+@media all and (min-width: 1024px) {
+    .nav-item:hover {
+        color: var(--white);
+        transition: 100ms ease-in-out;
+    }
+    #footer_container a:hover {
+        color: var(--white);
+        transition: 100ms ease-in-out;
+    }
+}
+
+@media all and (max-width: 1024px) {
+
+}
+
+/* Specific */
 @media all and (min-width: 1280px) {
-    #index_container {
-        max-width: 75%;
-        padding: 1rem 2rem 0 2rem;
+    #information_container {
+        max-width: 80%;
+        margin: auto;
     }
 }
 
 @media all and (min-width: 1024px) and (max-width: 1280px) {
-    #index_container {
-        padding: 1rem 2rem 0 2rem;
-    }
 }
 
 @media all and (min-width: 768px) and (max-width: 1024px) {
-    #index_container {
-        padding: 1rem 2rem 0 2rem;
-    }
 }
 
 @media all and (min-width: 480px) and (max-width: 768px) {
-    #index_container {
-        padding: 1rem 2rem 0 2rem;
-    }
 }
 
 @media all and (max-width: 480px) {
-    #index_container {
-        padding: 1rem 2rem 0 2rem;
-    }
+    
 }

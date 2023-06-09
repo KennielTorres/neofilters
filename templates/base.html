@@ -6,28 +6,14 @@
         <title>spotifilters</title>
         <meta name="description" content="Advanced filtering options for Spotify.">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <link rel="stylesheet" type="text/css" href="../static/styles/base.css">
-        {% block styling %}
+        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles/base.css')}}">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.0/jquery.min.js"></script>
+        <link rel="shortcut icon" href="data:image/x-icon;," type="image/x-icon">
+        {% block head %}
         {% endblock %}
     </head>
     <body>
-        <div id="body_container">
-            <header id="header">
-                <nav class="flex justify-center align-center h-100">
-                    <a href="{{ url_for('index') }}" class="no-text-decor color-inherit">spotifilters</a>
-                </nav>
-            </header>
-            <main id="main">
-                {% block content %}
-                {% endblock %}
-            </main>
-            <footer id="footer">
-                <ul class="flex justify-evenly align-center h-100">
-                    <li class="list-item">Developed by: Kenniel Torres</li>
-                    <li class="list-item"><a class="no-text-decor color-inherit" href="https://developer.spotify.com/">Spotify Web API</a></li>
-                </ul>
-            </footer>
-        </div>
-
+       {% block body %}
+       {% endblock %}
     </body>
 </html>
