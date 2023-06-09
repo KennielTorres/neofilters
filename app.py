@@ -154,55 +154,12 @@ def playlist(playlist_id):
     else:
         tracks = track_items_list
 
-    """
-        track name = track_items_array[#item_index] || item .get('track').get('name')
-        track url = .get('track').get('external_urls').get('spotify')
-        track artwork = .get('track').get('album').get('images')[0].get('url')
-        track artist/s = .get('track').get('artists')[#artist_index].get('name')
-        artist/s url = .get('track').get('artists')[0].get('external_urls').get('spotify')
-        duration in ms = .get('track').get('duration_ms')
-        explicit = .get('track').get('explicit') 
-        release date = .get('track').get('album').get('release_date')
-        isrc = .get('track').get('external_ids').get('isrc')
-        added to playlist (date:time) = .get('added_at')
-        popularity = .get('track').get('popularity')
-    """
     return render_template('playlist.html', spotify=spotify, playlist_details=playlist_details, tracks=tracks, request=request)
-    # return 
 
 @app.errorhandler(404)
 def invalid_route():
     return '404 Page not found'
 
-@app.route('/testing')
-@login_required
-def testing():
-    cache_handler = spotipy.cache_handler.FlaskSessionCacheHandler(session)
-    auth_manager = spotipy.oauth2.SpotifyOAuth(cache_handler=cache_handler)
-    # Token expired, or broken, return to sign in page
-    if not auth_manager.validate_token(cache_handler.get_cached_token()):
-        return redirect('/')    
-    
-    spotify = spotipy.Spotify(auth_manager=auth_manager)
-    empty = '' #empty to extract actual args
-    FIELDS = (  'next,'
-                'items(added_at,'
-                    'track(album(album_type, images, release_date), artists(external_urls.spotify, name), duration_ms, explicit, external_ids.isrc, external_urls.spotify, id, name, popularity))'
-                )
-    
-    test_id = '3x17Px8ImK43i0cdnFUyfl' # dynamic value in full code
-    result = spotify.playlist_items(playlist_id=test_id, fields=FIELDS, market='US', additional_types=['track'])
-
-    item = result.get('items')
-
-    # return render_template('testing.html', item=item)
-    # return result.get('items').sort(key=lambda x: x['track']['name'])
-    # process_data(result.get('items'))
-    result = process_data(result.get('items'))
-    sortedData = sorted(result, key=lambda x: datetime.strptime(x['track']['album']['release_date'], '%Y-%m-%d'))
-    return sortedData
-    # return result
-    
 
 if __name__ == "__main__":
-    app.run(debug=True, port=8000)
+    app.run(debug=False, port=8000)
