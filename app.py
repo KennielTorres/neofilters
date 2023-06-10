@@ -36,6 +36,16 @@ def index():
 
     return render_template('index.html', auth_url=auth_url)
 
+@app.route('/about')
+def about():
+    cache_handler = spotipy.cache_handler.FlaskSessionCacheHandler(session)
+    auth_manager = spotipy.oauth2.SpotifyOAuth(scope=SCOPE,
+                                               cache_handler=cache_handler,
+                                               show_dialog=True)
+    auth_url = auth_manager.get_authorize_url()
+
+    return render_template('about.html', auth_url=auth_url)
+
 @app.route('/callback')
 def callback():
     cache_handler = spotipy.cache_handler.FlaskSessionCacheHandler(session)
@@ -161,5 +171,5 @@ def invalid_route():
     return '404 Page not found'
 
 
-# if __name__ == "__main__":
-    # app.run(debug=False, port=8000)
+if __name__ == "__main__":
+    app.run(debug=True, port=8000)
