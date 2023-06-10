@@ -16,3 +16,4 @@ six==1.16.0
 spotipy==2.23.0
 urllib3==1.26.16
 Werkzeug==2.3.4
+Gunicorn
