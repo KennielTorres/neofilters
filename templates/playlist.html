@@ -230,16 +230,16 @@
                             <select name="sort-select" id="sort-select" onchange="structureFormAction()">
                                 <option value="none" selected>Select</option>
                                 <option value="default">Default</option>
-                                <option value="alph-asc">A-Z</option>
-                                <option value="alph-desc">Z-A</option>
-                                <option value="dur-asc">Duration Ascending</option>
-                                <option value="dur-desc">Duration Descending</option>
+                                <!-- <option value="alph-asc">A-Z</option> -->
+                                <!-- <option value="alph-desc">Z-A</option> -->
+                                <!-- <option value="dur-asc">Duration Ascending</option> -->
+                                <!-- <option value="dur-desc">Duration Descending</option> -->
                                 <option value="most-popular">Most Popular First</option>
                                 <option value="least-popular">Least Popular First</option>
                                 <option value="rel-asc">Release Date Ascending</option>
                                 <option value="rel-desc">Release Date Descending</option>
-                                <option value="added-asc">Added Date Ascending</option>
-                                <option value="added-desc">Added Date Descending</option>
+                                <!-- <option value="added-asc">Added Date Ascending</option> -->
+                                <!-- <option value="added-desc">Added Date Descending</option> -->
                             </select>
                         </form>
                     </div>
@@ -248,36 +248,97 @@
             </div>
         </div>
         <div id="tracks-container">
+            <a href="https://open.spotify.com" title="Go to Spotify"><img id="spotify-logo" src="../static/icons/Spotify_Logo_RGB_Black.png"></a>
             {% for track in tracks %}
             <div class="track-card" 
                     data-id="card-{{ loop.index }}"
                     data-explicit="{{ track.get('track').get('explicit') }}"
                     >
                 <div class="card-block-1">
-                    {% if track.get('track').get('album').get('images')|length > 0 %}
-                        <img class="artwork" src="{{ track.get('track').get('album').get('images')[0].get('url') }}">
-                    {% else %}
-                        <img class="artwork" src="../static/icons/black_square.svg">
-                    {% endif %}
+                    <div class="flex flex-col flex-wrap">
+                        {% if track.get('track').get('album').get('images')|length > 0 %}
+                            <img class="artwork" src="
+                            {% if track.get('track').get('album').get('images')[0].get('url') is not none %}
+                                {{ track.get('track').get('album').get('images')[0].get('url') }}
+                            {% endif %}
+                            ">
+                            <div class="flex flex-row flex-wrap align-items-c">
+                                <a href="
+                                {% if track.get('track').get('external_urls').get('spotify') is not none %}
+                                    {{ track.get('track').get('external_urls').get('spotify') }}
+                                {% endif %}
+                                ">
+                                <img class="spotify-icon-redirect" id="redirect-{{ loop.index }}" src="../static/icons/Spotify_Icon_RGB_Black.png">
+                                </a>
+                                <h4 class="play-on">Play on Spotify</h4>
+                            </div>
+                        {% else %}
+                            Not Found
+                        {% endif %}
+                    </div>
                     <div class="c-b-1-row">
-                        <p class="duration c-b-1-row-item">{{ track.get('track').get('duration_ms') }}</p>
-                        {% if track.get('track').get('explicit') %}
-                            <img id="rating" src="../static/icons/explicit_track.svg" class="c-b-1-row-item">
+                        <p class="duration c-b-1-row-item">
+                            {% if track.get('track').get('duration_ms') is not none %}
+                                {{ track.get('track').get('duration_ms') }}
+                            {% endif %}
+                        </p>
+                        {% if track.get('track').get('explicit') is not none %}
+                            {% if track.get('track').get('explicit') %}
+                                <img id="rating" src="../static/icons/explicit_track.svg" class="c-b-1-row-item">
+                            {% endif %}
                         {% endif %}
                     </div>
                 </div>
                 <div class="card-block-2">
-                    <p class="track_name"><a href="{{ track.get('track').get('external_urls').get('spotify') }}" target="_blank" rel="noopener noreferrer">{{ track.get('track').get('name') }}</a></p>
-                    <p class="rel_date sm-margin" title="In ISO 8601 format.">Released: {{ track.get('track').get('album').get('release_date') }}</p>
+                    <p class="track_name"><a href="
+                        {% if track.get('track').get('external_urls').get('spotify') is not none %}
+                            {{ track.get('track').get('external_urls').get('spotify') }}
+                        {% endif %}
+                        " target="_blank" rel="noopener noreferrer">
+                        {% if track.get('track').get('name') is not none %}
+                            {{ track.get('track').get('name')|truncate(23, True) }}
+                        {% else %}
+                            Not Found
+                        {% endif %}
+                    </a></p>
+                    <p class="album_title sm-margin">Album: 
+                        {% if track.get('track').get('album').get('name') is not none %}
+                            <a href="
+                            {% if track.get('track').get('album').get('external_urls').get('spotify') is not none %}
+                                {{ track.get('track').get('album').get('external_urls').get('spotify') }}
+                            {% endif %}
+                            " target="_blank" rel="noopener noreferrer">
+                            {{ track.get('track').get('album').get('name') }}</a>
+                        {% else %}
+                            Not Found
+                        {% endif %}
+                    </p>
+                    <p class="rel_date sm-margin" title="In ISO 8601 format.">Released: 
+                        {% if track.get('track').get('album').get('release_date') is not none %}
+                            {{ track.get('track').get('album').get('release_date') }}
+                        {% else %}
+                            Not Found
+                        {% endif %}
+                    </p>
                     <p class="added_date sm-margin" title="In ISO 8601 format.">Added: {{ track.get('added_at')[:10] }}</p>
                 </div>
                 <div class="card-block-3">
                     <div class="artists sm-margin">
                         {% for artist in track.get('track').get('artists') %}
-                            <p class="artist-{{ loop.index }}"><a href="{{ artist.get('external_urls').get('spotify') }}" target="_blank" rel="noopener noreferrer">{{ artist.get('name') }}</a></p>
+                            <p class="artist-{{ loop.index }}"><a href="
+                                {% if artist.get('external_urls').get('spotify') is not none %}
+                                    {{ artist.get('external_urls').get('spotify') }}
+                                {% endif %}
+                                " target="_blank" rel="noopener noreferrer">{{ artist.get('name')|truncate(18, True) }}</a></p>
                         {% endfor %}
                     </div>
-                    <p class="isrc sm-margin">ISRC: {{ track.get('track').get('external_ids').get('isrc') }}</p>
+                    <p class="isrc sm-margin">ISRC: 
+                        {% if track.get('track').get('external_ids').get('isrc') is not none %}
+                            {{ track.get('track').get('external_ids').get('isrc')|upper }}
+                        {%else %}
+                            Not Found
+                        {% endif %}
+                    </p>
                     <p class="popularity sm-margin">Popularity: {{ track.get('track').get('popularity') }}</p>
                 </div>
             </div>

@@ -310,9 +310,29 @@ input[type="submit"]:hover {
     font-family: 'Playfair Display', serif;
 }
 
+.album_title {
+    text-align: center;
+}
+
 .artists {
     font-size: large;
     text-align: center;
+}
+
+#spotify-logo {
+    margin: 1rem 0 0 1rem;
+    padding: 0.25rem 0.25rem 0.25rem 0.25rem;
+    width: clamp(70px, 6rem, 280px);
+    height: auto;
+}
+
+.spotify-icon-redirect {
+    width: clamp(21px, 2rem, 4rem);
+    height: auto;
+}
+
+.play-on {
+    margin: 0 0 0 0.5rem;
 }
 
 .sm-margin {

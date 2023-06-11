@@ -22,7 +22,7 @@ def login_required(func):
     @functools.wraps(func)
     def secure_function(*args, **kwargs):
         if "token_info" not in session:
-            return redirect(url_for("index", next=request.url))
+            return redirect(url_for("index"))
         return func(*args, **kwargs)
     return secure_function
 
@@ -117,11 +117,11 @@ def playlist(playlist_id):
     # Fields supplied for wanted response
     FIELDS = (  'next,'
                 'items(added_at,'
-                    'track(album(images, release_date), artists(external_urls.spotify, name), duration_ms, explicit, external_ids.isrc, external_urls.spotify, id, name, popularity))'
+                    'track(album(images, release_date, name, external_urls.spotify), artists(external_urls.spotify, name), duration_ms, explicit, external_ids.isrc, external_urls.spotify, id, name, popularity))'
                 )
     
     # Response holding playlist name and public/private status
-    playlist_details = spotify.playlist(playlist_id=playlist_id, fields=('id, name, public'), market=user_country, additional_types=['track'])
+    playlist_details = spotify.playlist(playlist_id=playlist_id, fields=('id, name'), market=user_country, additional_types=['track'])
 
     track_items_list = [] # Holds all track items from provided playlist id
 
@@ -141,15 +141,15 @@ def playlist(playlist_id):
     sort_by = request.args.get('sort-by')
 
     # Sorting
-    if sort_by == 'alph-asc':
-        tracks = sorted(track_items_list, key=lambda x:x['track']['name'])
-    elif sort_by == 'alph-desc':
-        tracks = sorted(track_items_list, key=lambda x:x['track']['name'], reverse=True)
-    elif sort_by == 'dur-asc':
-        tracks = sorted(track_items_list, key=lambda x:x['track']['duration_ms'])
-    elif sort_by == 'dur-desc':
-        tracks = sorted(track_items_list, key=lambda x:x['track']['duration_ms'], reverse=True)
-    elif sort_by == 'most-popular':
+    # if sort_by == 'alph-asc':
+        # tracks = sorted(track_items_list, key=lambda x:x['track']['name'])
+    # elif sort_by == 'alph-desc':
+        # tracks = sorted(track_items_list, key=lambda x:x['track']['name'], reverse=True)
+    # elif sort_by == 'dur-asc':
+        # tracks = sorted(track_items_list, key=lambda x:x['track']['duration_ms'])
+    # elif sort_by == 'dur-desc':
+        # tracks = sorted(track_items_list, key=lambda x:x['track']['duration_ms'], reverse=True)
+    if sort_by == 'most-popular':
         tracks = sorted(track_items_list, key=lambda x:x['track']['popularity'], reverse=True)
     elif sort_by == 'least-popular':
         tracks = sorted(track_items_list, key=lambda x:x['track']['popularity'])
@@ -157,10 +157,10 @@ def playlist(playlist_id):
         tracks = sorted(track_items_list, key=lambda x: datetime.strptime(x['track']['album']['release_date'], '%Y-%m-%d'))
     elif sort_by == 'rel-desc':
         tracks = sorted(track_items_list, key=lambda x: datetime.strptime(x['track']['album']['release_date'], '%Y-%m-%d'), reverse=True)
-    elif sort_by == 'added-asc':
-        tracks = sorted(track_items_list, key=lambda x: datetime.strptime(x['added_at'], '%Y-%m-%d'))
-    elif sort_by == 'added-desc':
-        tracks = sorted(track_items_list, key=lambda x: datetime.strptime(x['added_at'], '%Y-%m-%d'), reverse=True)
+    # elif sort_by == 'added-asc':
+        # tracks = sorted(track_items_list, key=lambda x: datetime.strptime(x['added_at'], '%Y-%m-%d'))
+    # elif sort_by == 'added-desc':
+        # tracks = sorted(track_items_list, key=lambda x: datetime.strptime(x['added_at'], '%Y-%m-%d'), reverse=True)
     else:
         tracks = track_items_list
 
@@ -169,6 +169,35 @@ def playlist(playlist_id):
 @app.errorhandler(404)
 def invalid_route():
     return '404 Page not found'
+
+@app.route('/testing')
+@login_required
+def testing():
+    cache_handler = spotipy.cache_handler.FlaskSessionCacheHandler(session)
+    auth_manager = spotipy.oauth2.SpotifyOAuth(cache_handler=cache_handler)
+    # Token expired, or broken, return to sign in page
+    if not auth_manager.validate_token(cache_handler.get_cached_token()):
+        return redirect('/')    
+
+    spotify = spotipy.Spotify(auth_manager=auth_manager)
+    empty = ''
+    FIELDS = (  'next,'
+            'items(added_at,'
+                'track(album(images, release_date, name, external_urls(spotify)), artists(external_urls.spotify, name), duration_ms, explicit, external_ids.isrc, external_urls.spotify, id, name, popularity))'
+            )
+    items = [] # Holds all track items from provided playlist id
+
+    playlist_id = '4k344xe9xdSPWlCEYsKsFT' # Chosen because it has a few issues to solve in process_data 
+
+    response = spotify.playlist_items(playlist_id=playlist_id, fields=FIELDS, market='US', additional_types=['track'])
+    items = response.get('items')
+    while response.get('next'):
+        response = spotify.next(response)
+        items.extend(response.get('items'))
+
+    #items = process_data(items)
+
+    return items
 
 
 if __name__ == "__main__":
