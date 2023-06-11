@@ -166,7 +166,7 @@ def playlist(playlist_id):
     else:
         tracks = track_items_list
 
-    return render_template('playlist.html', spotify=spotify, playlist_details=playlist_details, tracks=tracks, request=request)
+    return render_template('playlist.html', spotify=spotify, user_country=user_country, playlist_details=playlist_details, tracks=tracks, request=request)
 
 @app.errorhandler(404)
 def invalid_route():

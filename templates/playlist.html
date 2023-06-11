@@ -83,33 +83,43 @@
             d.setHours(0, 0, 0, 0);
             return d;
         }
+        
+        // Helper function to check if a date is valid
+        function isValidDate(date) {
+            return date instanceof Date && !isNaN(date);
+        }
+
+        // Helper function to check if a date is within the specified range
+        function isWithinRange(date, lowerBound, upperBound) {
+            return (date >= lowerBound || !lowerBound) && (date <= upperBound || !upperBound);
+        }
 
         // Release Date Filtering
         $('#release-submit').click(function(){
             // Validate date inputs, if empty add class
             if ($('#rel-lower-bound').val() === '' || $('#rel-upper-bound').val() === ''){
-                $('#rel-lower-bound').addClass('invalid-input')
-                $('#rel-upper-bound').addClass('invalid-input')
+                $('#rel-lower-bound').addClass('invalid-input');
+                $('#rel-upper-bound').addClass('invalid-input');
             }
             else {
-                $('#rel-lower-bound').removeClass('invalid-input')
-                $('#rel-upper-bound').removeClass('invalid-input')
-                var rel_date_lower = new Date($('#rel-lower-bound').val()).withoutTime()
-                var rel_date_upper = new Date($('#rel-upper-bound').val()).withoutTime()
-
+                $('#rel-lower-bound').removeClass('invalid-input');
+                $('#rel-upper-bound').removeClass('invalid-input');
+                var rel_date_lower = new Date($('#rel-lower-bound').val()).withoutTime();
+                var rel_date_upper = new Date($('#rel-upper-bound').val()).withoutTime();
+            
                 $('#tracks-container > .track-card').each(function(){
-                    var card_date = new Date($(this).find('.rel_date').text().substring(10)).withoutTime()
-                    if (card_date >= rel_date_lower && card_date <= rel_date_upper){
-                        $(this).show()
+                    var card_date = new Date($(this).find('.rel_date').text().substring(10));
+                    
+                    if (isValidDate(card_date) && isWithinRange(card_date, rel_date_lower, rel_date_upper)){
+                        $(this).show();
                     }
                     else {
-                        $(this).hide()
+                        $(this).hide();
                     }
-                })
-
+                });
             }
         });
-        
+
         // Added Date Filtering
         $('#added-submit').click(function() {
             // Validate date inputs, if empty add class
@@ -125,12 +135,19 @@
 
                 $('#tracks-container > .track-card').each(function(){
                     var card_date = new Date($(this).find('.rel_date').text().substring(10)).withoutTime()
-                    if (card_date >= add_date_lower && card_date <= add_date_upper){
-                        $(this).show()
+                    // if (card_date >= add_date_lower && card_date <= add_date_upper){
+                        // $(this).show()
+                    // }
+                    // else {
+                        // $(this).hide()
+                    // }
+                    if (isValidDate(card_date) && isWithinRange(card_date, add_date_lower, add_date_upper)){
+                        $(this).show();
                     }
                     else {
-                        $(this).hide()
+                        $(this).hide();
                     }
+
                 })
             }
         });
@@ -152,6 +169,7 @@
         form.submit()
     };
 
+    // Structure form url to "default" url
     function defaultPlaylistView(){
         let form = document.getElementById('sort-form')
         let playlistUrl = window.location.href.split('?')[0]
@@ -282,11 +300,18 @@
                                 {{ track.get('track').get('duration_ms') }}
                             {% endif %}
                         </p>
-                        {% if track.get('track').get('explicit') is not none %}
+                        {% if user_country != 'KR' %}
+                            {% if track.get('track').get('explicit') is not none %}
+                                {% if track.get('track').get('explicit') %}
+                                    <img id="rating" src="../static/icons/explicit_track.svg" class="c-b-1-row-item">
+                                {% endif %}
+                            {% endif %}
+                        {% else %}
                             {% if track.get('track').get('explicit') %}
-                                <img id="rating" src="../static/icons/explicit_track.svg" class="c-b-1-row-item">
+                                <img id="rating" src="../static/icons/KR_explicit_badge.png" class="c-b-1-row-item">
                             {% endif %}
                         {% endif %}
+
                     </div>
                 </div>
                 <div class="card-block-2">

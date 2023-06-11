@@ -280,6 +280,12 @@ input[type="submit"]:hover {
     width: 33%;
 }
 
+#rating {
+    width: 20px;
+    height: auto;
+    aspect-ratio: 1/1;
+}
+
 .c-b-1-row {
     display: flex;
     flex-direction: row;
