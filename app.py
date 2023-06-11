@@ -7,7 +7,7 @@ from flask import Flask, session, request, redirect, render_template, url_for
 import spotipy
 from datetime import datetime
 from flask_session import Session
-from utils.utils import process_data
+from utils.utils import process_data, sort_by_rel
 
 app = Flask(__name__, static_url_path='/static')
 app.config['SECRET_KEY'] = os.urandom(64)
@@ -154,9 +154,11 @@ def playlist(playlist_id):
     elif sort_by == 'least-popular':
         tracks = sorted(track_items_list, key=lambda x:x['track']['popularity'])
     elif sort_by == 'rel-asc':
-        tracks = sorted(track_items_list, key=lambda x: datetime.strptime(x['track']['album']['release_date'], '%Y-%m-%d'))
+        # tracks = sorted(track_items_list, key=lambda x: datetime.strptime(x['track']['album']['release_date'], '%Y-%m-%d'))
+        tracks = sort_by_rel(track_items_list, False)
     elif sort_by == 'rel-desc':
-        tracks = sorted(track_items_list, key=lambda x: datetime.strptime(x['track']['album']['release_date'], '%Y-%m-%d'), reverse=True)
+        # tracks = sorted(track_items_list, key=lambda x: datetime.strptime(x['track']['album']['release_date'], '%Y-%m-%d'), reverse=True)
+        tracks = sort_by_rel(track_items_list, True)
     # elif sort_by == 'added-asc':
         # tracks = sorted(track_items_list, key=lambda x: datetime.strptime(x['added_at'], '%Y-%m-%d'))
     # elif sort_by == 'added-desc':
