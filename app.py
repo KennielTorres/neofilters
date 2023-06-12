@@ -15,7 +15,7 @@ app.config['SESSION_COOKIE_SECURE'] = True
 app.config['SESSION_COOKIE_HTTPONLY'] = True
 Session(app)
 
-SCOPE = 'user-read-private user-read-email user-library-read playlist-read-private playlist-read-collaborative user-top-read'
+SCOPE = 'user-read-private user-read-email playlist-read-private playlist-read-collaborative'
 
 # Decorator to validate that user has signed in and can enter target route
 def login_required(func):
