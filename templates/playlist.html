@@ -24,22 +24,121 @@
             doResize = true;
         });
 
+        // Event handler for the header search input
+        $('#header-input').on('input', function() {
+            filterTracks();
+        });
 
-        // Name or Artist Live search functionality
+        // Event handler for the ISRC search input
+        $('#isrc-input').on('input', function() {
+            filterTracks();
+        });
+
+        // Event handler for the explicit checkbox
+        $('#explicit').on('change', function() {
+            filterTracks();
+        });
+
+        // Event handler for the clean checkbox
+        $('#clean').on('change', function() {
+            filterTracks();
+        });
+
+        // Event handler for the release date filter
+        $('#release-submit').on('click', function() {
+            filterTracks();
+        });
+
+        // Event handler for the added date filter
+        $('#added-submit').on('click', function() {
+            filterTracks();
+        });
+
+        // Event handler for the clear button
+        $('#reset-all').on('click', function() {
+            clearFilters();
+        });
+
+        // MISSING THE ARTISTS IN THE LIVE SEARCH ON TOP
+        function filterTracks() {
+            var searchQuery = $('#header-input').val().toLowerCase(); // TESTED
+            var isrcQuery = $('#isrc-input').val().toLowerCase(); // TESTED
+            var explicitChecked = $('#explicit').is(':checked'); // TESTED
+            var cleanChecked = $('#clean').is(':checked'); // TESTED
+            var relLowerBound = $('#rel-lower-bound').val(); // TESTED
+            var relUpperBound = $('#rel-upper-bound').val(); // TESTED
+            var addLowerBound = $('#add-lower-bound').val(); // TESTED
+            var addUpperBound = $('#add-upper-bound').val(); // TESTED
+            
+            $('.track-card').each(function() {
+                var trackName = $(this).find('.track_name').text().toLowerCase(); // TESTED
+                var isrc = $(this).find('.isrc').text().substring(6).toLowerCase(); // TESTED
+                var explicit = $(this).data('explicit').toLowerCase() === 'true'; // Converts data attribute string to boolean equivalent
+                var releaseDate = new Date($(this).find('.rel_date').text().substring(10)).withoutTime(); // TESTED
+                var addedDate = new Date($(this).find('.added_date').text().substring(7)).withoutTime(); // TESTED
+                var shouldShow =
+                ((!explicitChecked && !cleanChecked) || (explicitChecked && explicit) || (cleanChecked && !explicit)) &&
+                (hasSubstring(trackName, searchQuery) && hasSubstring(isrc, isrcQuery)) &&
+                (((isValidDate(releaseDate) && isDateInRange(releaseDate, relLowerBound, relUpperBound)) 
+                || (relLowerBound =='' && relUpperBound == '')) &&
+                ((isValidDate(addedDate) && isDateInRange(addedDate, addLowerBound, addUpperBound)) 
+                || (addLowerBound == '' && addUpperBound == ''))
+                );
+
+                // console.log("shouldShow = ", shouldShow)
+
+                $(this).toggle(shouldShow);
+            });
+        }
+
+        
+        function isDateInRange(dateString, lowerBound, upperBound) {
+            // var date = new Date(dateString);
+            var lower = new Date(lowerBound);
+            var upper = new Date(upperBound);
+            return (lowerBound == '' || dateString >= lower) && (upperBound == '' || dateString <= upper);
+        }
+        
+        function clearFilters() {
+            $('#header-input').val('');
+            $('#isrc-input').val('');
+            $('#explicit').prop('checked', false);
+            $('#clean').prop('checked', false);
+            $('#rel-lower-bound').val('');
+            $('#rel-upper-bound').val('');
+            $('#add-lower-bound').val('');
+            $('#add-upper-bound').val('');
+            
+            $('.track-card').show();
+        }
+
+        function hasSubstring(string, substring) {
+            return (string.indexOf(substring) >= 0)
+        }
+/*
+        // Filtering preparation
         $('#tracks-container > .track-card').each(function(){
             $(this).attr('data-search-terms', $(this).find('.track_name, .artists').text().trim().replace(/\s\s+/g, ' ').toLowerCase());
-            $(this).attr('data-isrc', $(this).find('.isrc').text().substring(6).toLowerCase())
+            $(this).attr('data-isrc', $(this).find('.isrc').text().substring(6).trim().toLowerCase())
+            $(this).attr('data-hidden', false);
         });
         
-        // Name or artist search
+        // Name or artist live search
         $('#header-input').on('keyup', function(){
             var searchTerm = $(this).val().trim().toLowerCase();
             $('#tracks-container > .track-card').each(function(){
+                var hidden = $(this).attr('data-hidden') == 'true'; // Check if already hidden
                 if ($(this).filter('[data-search-terms*="' + searchTerm + '"]').length > 0 || searchTerm.length < 1) {
-                    $(this).show();
+                    if (!hidden) {
+                        $(this).show();
+                        $(this).attr('data-hidden', false);
+                    }    
                 } 
                 else {
-                    $(this).hide();
+                    if (!hidden) {
+                        $(this).hide();
+                        $(this).attr('data-hidden', true);
+                    }
                 }
             });
         });
@@ -48,11 +147,18 @@
         $('#isrc-input').on('keyup', function(){
             var isrcSearch = $(this).val().trim().toLowerCase()
             $('#tracks-container > .track-card').each(function(){
+                var hidden = $(this).attr('data-hidden') == 'true'; // Check if already hidden
                 if ($(this).filter('[data-isrc*="' + isrcSearch + '"]').length > 0 || isrcSearch.length < 1) {
-                    $(this).show();
+                    if (!hidden) {
+                        $(this).show();
+                        $(this).attr('data-hidden', false);
+                    }
                 } 
                 else {
-                    $(this).hide();
+                    if (!hidden) {
+                        $(this).hide();
+                        $(this).attr('data-hidden', true);
+                    }
                 }
             });
         });
@@ -62,21 +168,41 @@
             var explicitChecked = $('#explicit').is(':checked');
             var cleanChecked = $('#clean').is(':checked');
 
-            if (explicitChecked && cleanChecked) {
-                explicitTracks.show();
-                cleanTracks.show();
-            } else if (explicitChecked) {
-                explicitTracks.show();
-                cleanTracks.hide();
-            } else if (cleanChecked) {
-                explicitTracks.hide();
-                cleanTracks.show();
-            } else {
-                explicitTracks.show();
-                cleanTracks.show();
-            }
+            $('#tracks-container > .track-card').each(function(){
+                var hidden = $(this).attr('data-hidden') == 'true';
+                if (explicitChecked && cleanChecked) {
+                    $(this).show();
+                    $(this).attr('data-hidden', false);
+                } 
+                else if (explicitChecked && $(this).attr('data-explicit') == 'True') {
+                    console.log("inside explicit and data-explicit = True")
+                    if (!hidden) {
+                        $(this).show();
+                        $(this).attr('data-hidden', false);
+                    }
+                    else {
+                        $(this).hide();
+                        $(this).attr('data-hidden', true);
+                    }
+                } 
+                else if (cleanChecked && $(this).attr('data-explicit') == 'False') {
+                    console.log("inside clean and data-explicit = False")
+                    if (!hidden) {
+                        $(this).show();
+                        $(this).attr('data-hidden', false);
+                    }
+                    else {
+                        $(this).hide();
+                        $(this).attr('data-hidden', true);
+                    }
+                } 
+                else {
+                    $(this).show();
+                    $(this).attr('data-hidden', false);
+                }
+            });
         });
-
+*/
         // Deserializing dates to remove time
         Date.prototype.withoutTime = function () {
             var d = new Date(this);
@@ -93,7 +219,7 @@
         function isWithinRange(date, lowerBound, upperBound) {
             return (date >= lowerBound || !lowerBound) && (date <= upperBound || !upperBound);
         }
-
+/*
         // Release Date Filtering
         $('#release-submit').click(function(){
             // Validate date inputs, if empty add class
@@ -154,10 +280,17 @@
 
         // Restore page to default and reset all inputs, filters, and sorting.
         $('#reset-all').click(function () {
-            defaultPlaylistView()
+            // defaultPlaylistView()
+            $('#explicit, #clean').prop('checked', false);
+            $('#header-input, #isrc-input, #rel-lower-bound, #rel-upper-bound, #add-lower-bound, #add-upper-bound').val('');
+            $('#tracks-container > .track-card').each(function(){
+                $(this).show();
+                $(this).attr('data-hidden', false); // Set as not hidden
+            });
         });
-    });
+        */
 
+    });
     // Structure form url to include selected value
     function structureFormAction(){
         let form = document.getElementById('sort-form')
