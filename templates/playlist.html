@@ -5,9 +5,6 @@
 <script type="text/javascript" src="{{ url_for('static', filename='js/playlist.js') }}"></script>
 <script>
     jQuery(document).ready(function($){
-        var explicitTracks = $("[data-explicit='True']")
-        var cleanTracks = $("[data-explicit='False']")
-
         var resizeDelay = 200;
         var doResize = true;
         var resizer = function () {
@@ -59,33 +56,32 @@
             clearFilters();
         });
 
-        // MISSING THE ARTISTS IN THE LIVE SEARCH ON TOP
         function filterTracks() {
-            var searchQuery = $('#header-input').val().toLowerCase(); // TESTED
-            var isrcQuery = $('#isrc-input').val().toLowerCase(); // TESTED
-            var explicitChecked = $('#explicit').is(':checked'); // TESTED
-            var cleanChecked = $('#clean').is(':checked'); // TESTED
-            var relLowerBound = $('#rel-lower-bound').val(); // TESTED
-            var relUpperBound = $('#rel-upper-bound').val(); // TESTED
-            var addLowerBound = $('#add-lower-bound').val(); // TESTED
-            var addUpperBound = $('#add-upper-bound').val(); // TESTED
+            var searchQuery = $('#header-input').val().toLowerCase();
+            // console.log("searching ... ", searchQuery)
+            var isrcQuery = $('#isrc-input').val().toLowerCase();
+            var explicitChecked = $('#explicit').is(':checked');
+            var cleanChecked = $('#clean').is(':checked');
+            var relLowerBound = $('#rel-lower-bound').val();
+            var relUpperBound = $('#rel-upper-bound').val();
+            var addLowerBound = $('#add-lower-bound').val();
+            var addUpperBound = $('#add-upper-bound').val();
             
             $('.track-card').each(function() {
-                var trackName = $(this).find('.track_name').text().toLowerCase(); // TESTED
-                var isrc = $(this).find('.isrc').text().substring(6).toLowerCase(); // TESTED
+                var trackName = $(this).find('.track_name').text().toLowerCase();
+                var artists = $(this).find('.artists').text().toLowerCase();
+                var isrc = $(this).find('.isrc').text().substring(6).toLowerCase();
                 var explicit = $(this).data('explicit').toLowerCase() === 'true'; // Converts data attribute string to boolean equivalent
-                var releaseDate = new Date($(this).find('.rel_date').text().substring(10)).withoutTime(); // TESTED
-                var addedDate = new Date($(this).find('.added_date').text().substring(7)).withoutTime(); // TESTED
+                var releaseDate = new Date($(this).find('.rel_date').text().substring(10)).withoutTime();
+                var addedDate = new Date($(this).find('.added_date').text().substring(7)).withoutTime();
                 var shouldShow =
-                ((!explicitChecked && !cleanChecked) || (explicitChecked && explicit) || (cleanChecked && !explicit)) &&
-                (hasSubstring(trackName, searchQuery) && hasSubstring(isrc, isrcQuery)) &&
-                (((isValidDate(releaseDate) && isDateInRange(releaseDate, relLowerBound, relUpperBound)) 
-                || (relLowerBound =='' && relUpperBound == '')) &&
-                ((isValidDate(addedDate) && isDateInRange(addedDate, addLowerBound, addUpperBound)) 
-                || (addLowerBound == '' && addUpperBound == ''))
-                );
-
-                // console.log("shouldShow = ", shouldShow)
+                                ((!explicitChecked && !cleanChecked) || (explicitChecked && explicit) || (cleanChecked && !explicit)) &&
+                                ((hasSubstring(trackName, searchQuery) || hasSubstring(artists, searchQuery)) && hasSubstring(isrc, isrcQuery)) &&
+                                (((isValidDate(releaseDate) && isDateInRange(releaseDate, relLowerBound, relUpperBound)) 
+                                || (relLowerBound =='' && relUpperBound == '')) &&
+                                ((isValidDate(addedDate) && isDateInRange(addedDate, addLowerBound, addUpperBound)) 
+                                || (addLowerBound == '' && addUpperBound == ''))
+                                );
 
                 $(this).toggle(shouldShow);
             });
@@ -93,7 +89,6 @@
 
         
         function isDateInRange(dateString, lowerBound, upperBound) {
-            // var date = new Date(dateString);
             var lower = new Date(lowerBound);
             var upper = new Date(upperBound);
             return (lowerBound == '' || dateString >= lower) && (upperBound == '' || dateString <= upper);
@@ -115,94 +110,7 @@
         function hasSubstring(string, substring) {
             return (string.indexOf(substring) >= 0)
         }
-/*
-        // Filtering preparation
-        $('#tracks-container > .track-card').each(function(){
-            $(this).attr('data-search-terms', $(this).find('.track_name, .artists').text().trim().replace(/\s\s+/g, ' ').toLowerCase());
-            $(this).attr('data-isrc', $(this).find('.isrc').text().substring(6).trim().toLowerCase())
-            $(this).attr('data-hidden', false);
-        });
-        
-        // Name or artist live search
-        $('#header-input').on('keyup', function(){
-            var searchTerm = $(this).val().trim().toLowerCase();
-            $('#tracks-container > .track-card').each(function(){
-                var hidden = $(this).attr('data-hidden') == 'true'; // Check if already hidden
-                if ($(this).filter('[data-search-terms*="' + searchTerm + '"]').length > 0 || searchTerm.length < 1) {
-                    if (!hidden) {
-                        $(this).show();
-                        $(this).attr('data-hidden', false);
-                    }    
-                } 
-                else {
-                    if (!hidden) {
-                        $(this).hide();
-                        $(this).attr('data-hidden', true);
-                    }
-                }
-            });
-        });
 
-        // ISRC Live search functionality
-        $('#isrc-input').on('keyup', function(){
-            var isrcSearch = $(this).val().trim().toLowerCase()
-            $('#tracks-container > .track-card').each(function(){
-                var hidden = $(this).attr('data-hidden') == 'true'; // Check if already hidden
-                if ($(this).filter('[data-isrc*="' + isrcSearch + '"]').length > 0 || isrcSearch.length < 1) {
-                    if (!hidden) {
-                        $(this).show();
-                        $(this).attr('data-hidden', false);
-                    }
-                } 
-                else {
-                    if (!hidden) {
-                        $(this).hide();
-                        $(this).attr('data-hidden', true);
-                    }
-                }
-            });
-        });
-
-        // Explicit and Clean hide or display
-        $('#explicit, #clean').change(function() {
-            var explicitChecked = $('#explicit').is(':checked');
-            var cleanChecked = $('#clean').is(':checked');
-
-            $('#tracks-container > .track-card').each(function(){
-                var hidden = $(this).attr('data-hidden') == 'true';
-                if (explicitChecked && cleanChecked) {
-                    $(this).show();
-                    $(this).attr('data-hidden', false);
-                } 
-                else if (explicitChecked && $(this).attr('data-explicit') == 'True') {
-                    console.log("inside explicit and data-explicit = True")
-                    if (!hidden) {
-                        $(this).show();
-                        $(this).attr('data-hidden', false);
-                    }
-                    else {
-                        $(this).hide();
-                        $(this).attr('data-hidden', true);
-                    }
-                } 
-                else if (cleanChecked && $(this).attr('data-explicit') == 'False') {
-                    console.log("inside clean and data-explicit = False")
-                    if (!hidden) {
-                        $(this).show();
-                        $(this).attr('data-hidden', false);
-                    }
-                    else {
-                        $(this).hide();
-                        $(this).attr('data-hidden', true);
-                    }
-                } 
-                else {
-                    $(this).show();
-                    $(this).attr('data-hidden', false);
-                }
-            });
-        });
-*/
         // Deserializing dates to remove time
         Date.prototype.withoutTime = function () {
             var d = new Date(this);
@@ -219,76 +127,6 @@
         function isWithinRange(date, lowerBound, upperBound) {
             return (date >= lowerBound || !lowerBound) && (date <= upperBound || !upperBound);
         }
-/*
-        // Release Date Filtering
-        $('#release-submit').click(function(){
-            // Validate date inputs, if empty add class
-            if ($('#rel-lower-bound').val() === '' || $('#rel-upper-bound').val() === ''){
-                $('#rel-lower-bound').addClass('invalid-input');
-                $('#rel-upper-bound').addClass('invalid-input');
-            }
-            else {
-                $('#rel-lower-bound').removeClass('invalid-input');
-                $('#rel-upper-bound').removeClass('invalid-input');
-                var rel_date_lower = new Date($('#rel-lower-bound').val()).withoutTime();
-                var rel_date_upper = new Date($('#rel-upper-bound').val()).withoutTime();
-            
-                $('#tracks-container > .track-card').each(function(){
-                    var card_date = new Date($(this).find('.rel_date').text().substring(10));
-                    
-                    if (isValidDate(card_date) && isWithinRange(card_date, rel_date_lower, rel_date_upper)){
-                        $(this).show();
-                    }
-                    else {
-                        $(this).hide();
-                    }
-                });
-            }
-        });
-
-        // Added Date Filtering
-        $('#added-submit').click(function() {
-            // Validate date inputs, if empty add class
-            if ($('#add-lower-bound').val() === '' || $('#add-upper-bound').val() === ''){
-                $('#add-lower-bound').addClass('invalid-input')
-                $('#add-upper-bound').addClass('invalid-input')
-            }
-            else {
-                $('#add-lower-bound').removeClass('invalid-input')
-                $('#add-upper-bound').removeClass('invalid-input')
-                var add_date_lower = new Date($('#add-lower-bound').val()).withoutTime()
-                var add_date_upper = new Date($('#add-upper-bound').val()).withoutTime()
-
-                $('#tracks-container > .track-card').each(function(){
-                    var card_date = new Date($(this).find('.rel_date').text().substring(10)).withoutTime()
-                    // if (card_date >= add_date_lower && card_date <= add_date_upper){
-                        // $(this).show()
-                    // }
-                    // else {
-                        // $(this).hide()
-                    // }
-                    if (isValidDate(card_date) && isWithinRange(card_date, add_date_lower, add_date_upper)){
-                        $(this).show();
-                    }
-                    else {
-                        $(this).hide();
-                    }
-
-                })
-            }
-        });
-
-        // Restore page to default and reset all inputs, filters, and sorting.
-        $('#reset-all').click(function () {
-            // defaultPlaylistView()
-            $('#explicit, #clean').prop('checked', false);
-            $('#header-input, #isrc-input, #rel-lower-bound, #rel-upper-bound, #add-lower-bound, #add-upper-bound').val('');
-            $('#tracks-container > .track-card').each(function(){
-                $(this).show();
-                $(this).attr('data-hidden', false); // Set as not hidden
-            });
-        });
-        */
 
     });
     // Structure form url to include selected value
