@@ -244,15 +244,6 @@ input[type="submit"]:hover {
     border: 3px solid #d0342c;
 }
 
-#sorting-options {
-    justify-content: center;
-    margin: 1rem 0 0 0;
-}
-
-#sort-select {
-    margin: 0.5rem 0 0 0;
-    max-width: 7rem;
-}
 
 #tracks-container {
     grid-area: 1 / 2 / 3 / 3;

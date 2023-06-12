@@ -5,9 +5,8 @@ import os
 import functools
 from flask import Flask, session, request, redirect, render_template, url_for
 import spotipy
-from datetime import datetime
 from flask_session import Session
-from utils.utils import process_data, sort_by_rel
+from utils.utils import process_data
 
 app = Flask(__name__, static_url_path='/static')
 app.config['SECRET_KEY'] = os.urandom(64)
@@ -137,69 +136,11 @@ def playlist(playlist_id):
     # Process list containing all tracks to obtain the final data
     track_items_list = process_data(track_items_list)
 
-    # Sort data based on url argument
-    sort_by = request.args.get('sort-by')
-
-    # Sorting
-    # if sort_by == 'alph-asc':
-        # tracks = sorted(track_items_list, key=lambda x:x['track']['name'])
-    # elif sort_by == 'alph-desc':
-        # tracks = sorted(track_items_list, key=lambda x:x['track']['name'], reverse=True)
-    # elif sort_by == 'dur-asc':
-        # tracks = sorted(track_items_list, key=lambda x:x['track']['duration_ms'])
-    # elif sort_by == 'dur-desc':
-        # tracks = sorted(track_items_list, key=lambda x:x['track']['duration_ms'], reverse=True)
-    if sort_by == 'most-popular':
-        tracks = sorted(track_items_list, key=lambda x:x['track']['popularity'], reverse=True)
-    elif sort_by == 'least-popular':
-        tracks = sorted(track_items_list, key=lambda x:x['track']['popularity'])
-    elif sort_by == 'rel-asc':
-        # tracks = sorted(track_items_list, key=lambda x: datetime.strptime(x['track']['album']['release_date'], '%Y-%m-%d'))
-        tracks = sort_by_rel(track_items_list, False)
-    elif sort_by == 'rel-desc':
-        # tracks = sorted(track_items_list, key=lambda x: datetime.strptime(x['track']['album']['release_date'], '%Y-%m-%d'), reverse=True)
-        tracks = sort_by_rel(track_items_list, True)
-    # elif sort_by == 'added-asc':
-        # tracks = sorted(track_items_list, key=lambda x: datetime.strptime(x['added_at'], '%Y-%m-%d'))
-    # elif sort_by == 'added-desc':
-        # tracks = sorted(track_items_list, key=lambda x: datetime.strptime(x['added_at'], '%Y-%m-%d'), reverse=True)
-    else:
-        tracks = track_items_list
-
-    return render_template('playlist.html', spotify=spotify, user_country=user_country, playlist_details=playlist_details, tracks=tracks, request=request)
+    return render_template('playlist.html', spotify=spotify, user_country=user_country, playlist_details=playlist_details, tracks=track_items_list, request=request)
 
 @app.errorhandler(404)
 def invalid_route():
     return '404 Page not found'
-
-@app.route('/testing')
-@login_required
-def testing():
-    cache_handler = spotipy.cache_handler.FlaskSessionCacheHandler(session)
-    auth_manager = spotipy.oauth2.SpotifyOAuth(cache_handler=cache_handler)
-    # Token expired, or broken, return to sign in page
-    if not auth_manager.validate_token(cache_handler.get_cached_token()):
-        return redirect('/')    
-
-    spotify = spotipy.Spotify(auth_manager=auth_manager)
-    empty = ''
-    FIELDS = (  'next,'
-            'items(added_at,'
-                'track(album(images, release_date, name, external_urls(spotify)), artists(external_urls.spotify, name), duration_ms, explicit, external_ids.isrc, external_urls.spotify, id, name, popularity))'
-            )
-    items = [] # Holds all track items from provided playlist id
-
-    playlist_id = '4k344xe9xdSPWlCEYsKsFT' # Chosen because it has a few issues to solve in process_data 
-
-    response = spotify.playlist_items(playlist_id=playlist_id, fields=FIELDS, market='US', additional_types=['track'])
-    items = response.get('items')
-    while response.get('next'):
-        response = spotify.next(response)
-        items.extend(response.get('items'))
-
-    #items = process_data(items)
-
-    return items
 
 
 if __name__ == "__main__":
