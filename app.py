@@ -1,7 +1,5 @@
-'''
-    flask spotipy Flask-Session
-'''
-import os
+
+import secrets
 import functools
 from flask import Flask, session, request, redirect, render_template, url_for
 import spotipy
@@ -9,9 +7,12 @@ from flask_session import Session
 from utils.utils import process_data
 
 app = Flask(__name__, static_url_path='/static')
-app.config['SECRET_KEY'] = os.urandom(64)
+app.config['SECRET_KEY'] = secrets.token_hex(64)
 app.config['SESSION_TYPE'] = 'filesystem'
 app.config['SESSION_FILE_DIR'] = './.flask_session/'
+app.config['SESSION_PERMANENT'] = False
+app.config['SESSION_COOKIE_SECURE'] = True
+app.config['SESSION_COOKIE_HTTPONLY'] = True
 Session(app)
 
 SCOPE = 'user-read-private user-read-email user-library-read playlist-read-private playlist-read-collaborative user-top-read'
