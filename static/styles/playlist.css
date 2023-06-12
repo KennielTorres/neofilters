@@ -60,6 +60,7 @@
     background: none;
     width: 10rem;
     font-size: 1rem;
+    color: var(--white);
 }
 
 #header-input:focus {
@@ -243,15 +244,6 @@ input[type="submit"]:hover {
     border: 3px solid #d0342c;
 }
 
-#sorting-options {
-    justify-content: center;
-    margin: 1rem 0 0 0;
-}
-
-#sort-select {
-    margin: 0.5rem 0 0 0;
-    max-width: 7rem;
-}
 
 #tracks-container {
     grid-area: 1 / 2 / 3 / 3;
@@ -278,6 +270,12 @@ input[type="submit"]:hover {
     justify-content: center;
     align-items: center;
     width: 33%;
+}
+
+#rating {
+    width: 20px;
+    height: auto;
+    aspect-ratio: 1/1;
 }
 
 .c-b-1-row {
@@ -310,9 +308,29 @@ input[type="submit"]:hover {
     font-family: 'Playfair Display', serif;
 }
 
+.album_title {
+    text-align: center;
+}
+
 .artists {
     font-size: large;
     text-align: center;
+}
+
+#spotify-logo {
+    margin: 1rem 0 0 1rem;
+    padding: 0.25rem 0.25rem 0.25rem 0.25rem;
+    width: clamp(70px, 6rem, 280px);
+    height: auto;
+}
+
+.spotify-icon-redirect {
+    width: clamp(21px, 2rem, 4rem);
+    height: auto;
+}
+
+.play-on {
+    margin: 0 0 0 0.5rem;
 }
 
 .sm-margin {

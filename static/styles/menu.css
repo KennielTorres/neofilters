@@ -34,6 +34,7 @@
 
 #playlist-container {
     width: 100%;
+    overflow-x: hidden;
 }
 
 #playlist-table {
@@ -75,6 +76,13 @@
     padding: 1rem 0 1rem 0;
     background-color: var(--spotify-gray);
     font-size: 0.9rem;
+}
+
+#spotify-logo {
+    margin: 1rem 0 0 1rem;
+    padding: 0.25rem 0.25rem 0.25rem 0.25rem;
+    width: clamp(70px, 6rem, 280px);
+    height: auto;
 }
 
 /* Classes */

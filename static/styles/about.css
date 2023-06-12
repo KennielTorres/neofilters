@@ -1,0 +1,102 @@
+h2,
+h3 {
+    display: inline-block;
+    border-bottom: 1.5px solid var(--spotify-gray);
+    padding: 0 0 0.25rem 0;
+}
+
+h2 {
+    margin: 1rem 0 0 0;
+}
+
+h3 {
+    margin: 1.5rem 0 0 0;
+}
+
+
+#nav-container,
+#attrib-list {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+}
+
+#nav-container,
+#attrib-list {
+    align-items: center;
+}
+
+#nav-container {
+    justify-content: space-between;
+    padding: 1.25rem 1rem 1.25rem 1rem;
+    background-color: var(--spotify-green);
+    position: sticky;
+    top: 0;
+}
+
+.nav-end-item,
+#content-container {
+    margin: 0 1rem 0 1rem;
+}
+
+#return {
+    display: inline-block;
+    margin: 0.5rem 0 0 0;
+    padding: 0.5rem 0.5rem 0.5rem 0.5rem;
+    color: var(--spotify-gray);
+    border-radius: 10px;
+}
+
+#attrib-list {
+    margin: 1rem 0 2rem 0;
+}
+
+.list-item {
+    margin: 0 0.25rem 0 0.25rem;
+}
+
+.pointer {
+    cursor: pointer;
+}
+
+.a-no-style {
+    text-decoration: none;
+    color: inherit;
+}
+.tab {
+    margin: 0 0 0 2rem;
+}
+
+/* Media Queries
+* ------------------------------------------
+*  Responsive Grid Media Queries - 1280, 1024, 768, 480
+*   1280-1024   - desktop (default grid)
+*   1024-768    - tablet landscape
+*   768-480     - tablet 
+*   480-less    - phone landscape & smaller
+* --------------------------------------------
+*/
+
+/* General */
+@media all and (min-width: 1024px) {
+    body-wrapper {
+        max-width: 75%;
+    }
+    a:hover {
+        transition: 50ms ease-in-out;
+        color: var(--spotify-green);
+    }
+    .nav-item:hover {
+        color: var(--white);
+        transition: 100ms ease-in-out;
+    }
+    #return:hover {
+        transition: all 100ms ease-in;
+        color: var(--spotify-dark);
+        background-color: var(--spotify-green);
+    }
+}
+
+@media all and (max-width: 1024px) {
+
+}

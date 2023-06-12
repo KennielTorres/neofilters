@@ -50,6 +50,7 @@
         <a class="pointer" title='Sign Out of Spotify.' onclick="window.location = window.location.origin.concat('/signout')">Sign Out</a>
     </nav>
     <div id="playlist-container">
+        <a href="https://open.spotify.com" title="Go to Spotify"><img id="spotify-logo" src="../static/icons/Spotify_Logo_RGB_Black.png"></a>
         <table id="playlist-table">
             <thead>
                 <tr>
@@ -65,17 +66,22 @@
                             {% if playlist.get('images')[0].get('url')|length > 0 %}
                                 <img class="picture-1" id="art" src="{{ playlist.get('images')[0].get('url') }}">
                             {% else %}
-                                <img class="picture-1" id="art" src="../static/icons/black_square.svg">
+                                <!-- <img class="picture-1" id="art" src="../static/icons/black_square.svg"> -->
+                                Not Found
                             {% endif %}
                         </td>
                         <td class="table-elements" id="playlist-name">
-                            {{ playlist.get('name')|default('Playlist',true)|truncate(25, True) }}
+                            {% if playlist.get('name') is not none %}
+                                {{ playlist.get('name')|truncate(25, True) }}
+                            {% endif %}
                         </td>
                         <td class="table-elements">
-                            {% if playlist.get('public') %}
-                                Public
-                            {% else %}
-                                Private
+                            {% if playlist.get('public') is not none %}
+                                {% if playlist.get('public') %}
+                                    Public
+                                {% else %}
+                                    Private
+                                {% endif %}
                             {% endif %}
                         </td>
                     </tr>
@@ -85,8 +91,7 @@
     </div>
     <div id="footer_container">
         <p class="footer-item">Developed by: <a class="pointer a-no-style" href="https://www.linkedin.com/in/kennieltorres/">Kenniel Torres</a></p>
-        <a class="footer-item pointer a-no-style" href="https://developer.spotify.com/">Spotify Web API</a>
-        <a class="footer-item pointer a-no-style" href="https://spotipy.readthedocs.io/">Spotipy Library</a>
+        <a class="footer-item pointer a-no-style" href="{{ url_for('about') }}">About</a>
     </div>
 </div>
 {% endblock %}

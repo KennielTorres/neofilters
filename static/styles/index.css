@@ -52,6 +52,14 @@
     font-weight: 900;
 }
 
+#spotify-logo {
+    margin: 1rem 0 0 0;
+    padding: 0.25rem 0.25rem 0.25rem 0.25rem;
+    width: clamp(70px, 6rem, 280px);
+    height: auto;
+}
+
+
 /* Classes */
 
 .pointer {
@@ -83,6 +91,10 @@
     }
     #footer_container a:hover {
         color: var(--white);
+        transition: 100ms ease-in-out;
+    }
+    #spotify-logo:hover {
+        border-bottom: 2px solid var(--spotify-green);
         transition: 100ms ease-in-out;
     }
 }
