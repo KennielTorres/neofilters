@@ -14,10 +14,6 @@ A [Spotify](https://www.spotify.com/)-based application that allows you to view 
 - View Spotify's track Popularity rating
 
 
-
-## Demo
-
-You can view the live demo at [neofilters](https://neofilters.onrender.com)
 ## Tech Stack
 
 **Frontend:** HTML, CSS, JavaScript, jQuery
